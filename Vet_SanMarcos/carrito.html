@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinaria San Marcos - Carrito de Compras</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Nuestra hoja de estilos personalizada -->
+    <link rel="stylesheet" href="assets/css/estilos.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="logo-container">
+            <h1 class="site-title">Veterinaria San Marcos</h1>
+            <p class="site-subtitle">Carrito de Compras y Pedidos</p>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="blogs.html">Blogs</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="login.html">Iniciar Sesión</a></li>
+                <li><a href="registro.html">Registro</a></li>
+                <li><a href="carrito.html" class="cart-link active">🛒 Carrito (<span id="cart-count">0</span>)</a></li>
+                <li><a href="admin-home.html" class="admin-link">Panel Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        
+        <section class="container my-5" aria-labelledby="titulo-carrito">
+            <h2 id="titulo-carrito" class="mb-4 fw-bold">Tu Carrito de Compras</h2>
+            
+            <div class="row">
+                <!-- Tabla con los productos del carrito -->
+                <div class="col-lg-8">
+                    <div class="table-responsive bg-white p-3 rounded shadow-sm">
+                        <table class="table align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Precio</th>
+                                    <th>Cantidad</th>
+                                    <th>Subtotal</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-items-container">
+                                <!-- Los ítems se cargarán dinámicamente con JavaScript -->
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">El carrito está vacío.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Resumen de compra y pago simulado -->
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                    <div class="bg-white p-4 rounded shadow-sm">
+                        <h4 class="fw-bold mb-3">Resumen del Pedido</h4>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span id="cart-subtotal">$ 0 CLP</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 border-bottom pb-3">
+                            <span>IVA (19% incl.):</span>
+                            <span id="cart-iva">$ 0 CLP</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-4 fw-bold fs-5">
+                            <span>Total a Pagar:</span>
+                            <span id="cart-total" class="text-primary">$ 0 CLP</span>
+                        </div>
+                        
+                        <button id="btn-checkout" class="btn btn-success w-100 py-2 mb-2 fw-semibold" disabled>Simular Pagar Pedido</button>
+                        <button id="btn-clear" class="btn btn-outline-danger w-100 py-2">Vaciar Carrito</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Veterinaria San Marcos. Todos los derechos reservados. | Asignatura DSY1104 - Desarrollo Fullstack II</p>
+        <p>Dirección: Av. Vicuña Mackenna 491, Santiago | Teléfono: +56 2 2999 8888</p>
+    </footer>
+
+    <!-- Script para renderizar y gestionar el carrito desde LocalStorage -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderizarCarrito();
+
+            // Botón vaciar carrito
+            document.getElementById('btn-clear').addEventListener('click', function() {
+                if(confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
+                    localStorage.removeItem('cart');
+                    renderizarCarrito();
+                }
+            });
+
+            // Botón simular pago
+            document.getElementById('btn-checkout').addEventListener('click', function() {
+                alert("¡Compra simulada con éxito! Su solicitud de pedido/cita ha sido registrada en el sistema.");
+                localStorage.removeItem('cart');
+                renderizarCarrito();
+            });
+        });
+
+        function renderizarCarrito() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const container = document.getElementById('cart-items-container');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const ivaEl = document.getElementById('cart-iva');
+            const totalEl = document.getElementById('cart-total');
+            const btnCheckout = document.getElementById('btn-checkout');
+            const cartCountElement = document.getElementById('cart-count');
+
+            // Actualizar número en el navbar
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if(cartCountElement) cartCountElement.textContent = totalItems;
+
+            container.innerHTML = '';
+
+            if (cart.length === 0) {
+                container.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">Tu carrito está vacío actualmente.</td></tr>`;
+                subtotalEl.textContent = '$ 0 CLP';
+                ivaEl.textContent = '$ 0 CLP';
+                totalEl.textContent = '$ 0 CLP';
+                btnCheckout.disabled = true;
+                return;
+            }
+
+            let subtotalGeneral = 0;
+
+            cart.forEach((item, index) => {
+                const subtotalItem = item.price * item.quantity;
+                subtotalGeneral += subtotalItem;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="d-flex align-items-center gap-3">
+                        <img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover;" class="rounded">
+                        <span class="fw-semibold">${item.name}</span>
+                    </td>
+                    <td>$ ${item.price.toLocaleString('es-CL')}</td>
+                    <td>
+                        <input type="number" min="1" max="10" value="${item.quantity}" class="form-control form-control-sm w-50" onchange="cambiarCantidad(${index}, this.value)">
+                    </td>
+                    <td class="fw-semibold">$ ${subtotalItem.toLocaleString('es-CL')}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger" onclick="eliminarItem(${index})">Eliminar</button>
+                    </td>
+                `;
+                container.appendChild(tr);
+            });
+
+            const iva = Math.round(subtotalGeneral * 0.19); // Cálculo referencial de IVA
+            const total = subtotalGeneral;
+
+            subtotalEl.textContent = `$ ${subtotalGeneral.toLocaleString('es-CL')} CLP`;
+            ivaEl.textContent = `$ ${iva.toLocaleString('es-CL')} CLP`;
+            totalEl.textContent = `$ ${total.toLocaleString('es-CL')} CLP`;
+            btnCheckout.disabled = false;
+        }
+
+        // Función para cambiar cantidad de un producto en el array del LocalStorage
+        function cambiarCantidad(index, nuevaCantidad) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cant = parseInt(nuevaCantidad);
+            if (cant > 0) {
+                cart[index].quantity = cant;
+            } else {
+                cart.splice(index, 1);
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderizarCarrito();
+        }
+
+        // Función para eliminar un producto específico del carrito
+        function eliminarItem(index) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderizarCarrito();
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/funciones.js"></script>
+</body>
+</html>
