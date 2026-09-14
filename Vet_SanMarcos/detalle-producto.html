@@ -33,7 +33,7 @@
 
     <main class="main-content">
         
-        <div class="container my-5">
+        <section class="container my-5" aria-labelledby="prod-nombre">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="productos.html">Productos</a></li>
@@ -44,7 +44,7 @@
             <div class="row g-5 align-items-center bg-white p-4 rounded shadow-sm">
                 <!-- Imagen grande del producto -->
                 <div class="col-md-6 text-center">
-                    <img id="prod-img" src="https://placehold.co/400x300/f8fafc/334155?text=Cargando..." alt="Imagen del producto" class="img-fluid rounded border">
+                    <img id="prod-img" src="images/Veterinario1.jpg" alt="Imagen del producto" class="img-fluid rounded border">
                 </div>
 
                 <!-- Información y lógica de compra / añadir al carrito -->
@@ -62,7 +62,7 @@
                     <a href="productos.html" class="btn btn-outline-secondary btn-lg">Volver al Catálogo</a>
                 </div>
             </div>
-        </div>
+        </section>
 
     </main>
 
@@ -79,12 +79,12 @@
 
             // Simulación de base de datos local en JS para el detalle dinámico
             const productosBD = {
-                "SRV-001": { nombre: "Consulta Veterinaria General", precio: 25000, desc: "Evaluación clínica integral y revisión de constantes vitales realizadas por médicos veterinarios titulados.", img: "https://placehold.co/400x300/f8fafc/334155?text=Consulta+General" },
-                "FAR-103": { nombre: "Simparica 10-20 kg", precio: 21000, desc: "Comprimido masticable altamente palatable para el control eficaz y prolongado de pulgas, garrapatas y sarna.", img: "https://placehold.co/400x300/f8fafc/334155?text=Simparica+20kg" },
-                "PRO-201": { nombre: "Alimento Perro Adulto Salmón 3 kg", precio: 19990, desc: "Alimento súper premium formulado con proteínas de alta digestibilidad, ácidos grasos Omega 3 y 6 para un pelaje brillante.", img: "https://placehold.co/400x300/f8fafc/334155?text=Alimento+Salon" },
-                "FAR-104": { nombre: "NexGard Spectra Perros Medianos", precio: 23500, desc: "Protección mensual completa contra parásitos externos (pulgas y garrapatas) e internos (gusano del corazón y nemátodos).", img: "https://placehold.co/400x300/f8fafc/334155?text=NexGard+Spectra" },
-                "PRO-202": { nombre: "Snack Dental Felino 60g", precio: 4990, desc: "Premios crujientes diseñados específicamente para ayudar a reducir la acumulación de sarro dental en gatos adultos.", img: "https://placehold.co/400x300/f8fafc/334155?text=Snack+Dental" },
-                "SRV-002": { nombre: "Peluquería y Baño Sanitario", precio: 18000, desc: "Servicio profesional que incluye corte de pelo según estándar de raza, baño con productos hipoalergénicos, secado y corte de uñas.", img: "https://placehold.co/400x300/f8fafc/334155?text=Peluqueria+Canina" }
+                "SRV-001": { nombre: "Consulta Veterinaria General", precio: 25000, desc: "Evaluación clínica integral y revisión de constantes vitales realizadas por médicos veterinarios titulados.", img: "images/Veterinario1.jpg" },
+                "FAR-103": { nombre: "Simparica 10-20 kg", precio: 21000, desc: "Comprimido masticable altamente palatable para el control eficaz y prolongado de pulgas, garrapatas y sarna.", img: "images/antiparasitario.jpg" },
+                "PRO-201": { nombre: "Alimento Perro Adulto Salmón 3 kg", precio: 19990, desc: "Alimento súper premium formulado con proteínas de alta digestibilidad, ácidos grasos Omega 3 y 6 para un pelaje brillante.", img: "images/comida_perro.jpg" },
+                "FAR-104": { nombre: "NexGard Spectra Perros Medianos", precio: 23500, desc: "Protección mensual completa contra parásitos externos (pulgas y garrapatas) e internos (gusano del corazón y nemátodos).", img: "images/antiparasitario.jpg" },
+                "PRO-202": { nombre: "Snack Dental Felino 60g", precio: 4990, desc: "Premios crujientes diseñados específicamente para ayudar a reducir la acumulación de sarro dental en gatos adultos.", img: "images/comida_gato.png" },
+                "SRV-002": { nombre: "Peluquería y Baño Sanitario", precio: 18000, desc: "Servicio profesional que incluye corte de pelo según estándar de raza, baño con productos hipoalergénicos, secado y corte de uñas.", img: "images/champu.jpg" }
             };
 
             // Capturar el parámetro 'id' de la URL (ej: detalle-producto.html?id=FAR-103)
@@ -140,5 +140,6 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/funciones.js"></script>
 </body>
 </html>
