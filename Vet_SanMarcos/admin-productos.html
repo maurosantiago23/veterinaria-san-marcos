@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinaria San Marcos - Mantenedor de Productos</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Nuestra hoja de estilos personalizada -->
+    <link rel="stylesheet" href="assets/css/estilos.css">
+    <style>
+        .admin-wrapper { display: flex; min-height: calc(100vh - 140px); }
+        .admin-sidebar { width: 250px; background-color: #1e293b; color: #ffffff; padding: 20px; }
+        .admin-sidebar a { color: #cbd5e1; text-decoration: none; display: block; padding: 10px 15px; border-radius: 5px; margin-bottom: 5px; }
+        .admin-sidebar a:hover, .admin-sidebar a.active { background-color: #0f172a; color: #ffffff; }
+        .admin-content-area { flex-grow: 1; padding: 30px; background-color: #f8fafc; }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="logo-container">
+            <h1 class="site-title">Veterinaria San Marcos</h1>
+            <p class="site-subtitle">Gestión de Inventario y Productos</p>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Ver Sitio Web</a></li>
+                <li><a href="login.html">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="admin-wrapper">
+        <!-- Sidebar de navegación administrativa -->
+        <aside class="admin-sidebar">
+            <h5 class="text-uppercase fs-6 text-secondary mb-3 fw-bold">Menú Principal</h5>
+            <a href="admin-home.html">📊 Dashboard</a>
+            <a href="admin-productos.html" class="active">📦 Mantenedor Productos</a>
+            <a href="admin-producto-form.html">➕ Nuevo Producto</a>
+            <a href="admin-usuarios.html">👥 Mantenedor Usuarios</a>
+            <a href="admin-usuario-form.html">➕ Nuevo Usuario</a>
+        </aside>
+
+        <!-- Área de contenido principal -->
+        <main class="admin-content-area">
+            <section aria-labelledby="titulo-productos-admin">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 id="titulo-productos-admin" class="fw-bold m-0">Mantenedor de Productos</h2>
+                <a href="admin-producto-form.html" class="btn btn-primary fw-semibold">+ Agregar Producto</a>
+            </div>
+
+            <!-- Tabla de listado de productos -->
+            <div class="card shadow-sm border-0 bg-white p-3">
+                <div class="table-responsive">
+                    <table class="table align-middle table-hover">
+                        <thead class="table-light">
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nombre del Producto</th>
+                                    <th>Categoría</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                    <th>Acciones</th>
+                                </tr>
+                        </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold">SRV-001</td>
+                                    <td>Consulta Veterinaria General</td>
+                                    <td>Servicios</td>
+                                    <td>$ 25.000</td>
+                                    <td>N/A</td>
+                                    <td>
+                                        <a href="admin-producto-form.html?id=SRV-001" class="btn btn-sm btn-outline-primary me-1">Editar</a>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="alert('Funcionalidad de eliminación simulada')">Eliminar</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">FAR-103</td>
+                                    <td>Simparica 10-20 kg</td>
+                                    <td>Farmacia</td>
+                                    <td>$ 21.000</td>
+                                    <td><span class="badge bg-danger">2 (Crítico)</span></td>
+                                    <td>
+                                        <a href="admin-producto-form.html?id=FAR-103" class="btn btn-sm btn-outline-primary me-1">Editar</a>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="alert('Funcionalidad de eliminación simulada')">Eliminar</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">PRO-201</td>
+                                    <td>Alimento Perro Adulto Salmón 3 kg</td>
+                                    <td>Alimentos</td>
+                                    <td>$ 19.990</td>
+                                    <td><span class="badge bg-success">15</span></td>
+                                    <td>
+                                        <a href="admin-producto-form.html?id=PRO-201" class="btn btn-sm btn-outline-primary me-1">Editar</a>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="alert('Funcionalidad de eliminación simulada')">Eliminar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Veterinaria San Marcos. Todos los derechos reservados. | Docente: Hernan Saavedra (DSY1104)</p>
+        <p>Desarrolladores: Mauro Santiago (mau.santiago@duocuc.cl) | Gabriel González (gabre.gonzalez@duocuc.cl)</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/funciones.js"></script>
+</body>
+</html>

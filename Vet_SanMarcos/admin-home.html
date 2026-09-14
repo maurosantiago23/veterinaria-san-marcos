@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinaria San Marcos - Panel de Administración</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Nuestra hoja de estilos personalizada -->
+    <link rel="stylesheet" href="assets/css/estilos.css">
+    <style>
+        /* Estilos específicos para la estructura de administración con Sidebar */
+        .admin-wrapper {
+            display: flex;
+            min-height: calc(100vh - 140px);
+        }
+        .admin-sidebar {
+            width: 250px;
+            background-color: #1e293b;
+            color: #ffffff;
+            padding: 20px;
+        }
+        .admin-sidebar a {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            transition: background 0.2s;
+        }
+        .admin-sidebar a:hover, .admin-sidebar a.active {
+            background-color: #0f172a;
+            color: #ffffff;
+        }
+        .admin-content-area {
+            flex-grow: 1;
+            padding: 30px;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="logo-container">
+            <h1 class="site-title">Veterinaria San Marcos</h1>
+            <p class="site-subtitle">Módulo de Administración y Gestión (RBAC)</p>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Ver Sitio Web</a></li>
+                <li><a href="login.html">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="admin-wrapper">
+        <!-- Sidebar de navegación administrativa -->
+        <aside class="admin-sidebar">
+            <h5 class="text-uppercase fs-6 text-secondary mb-3 fw-bold">Menú Principal</h5>
+            <a href="admin-home.html" class="active">📊 Dashboard</a>
+            <a href="admin-productos.html">📦 Mantenedor Productos</a>
+            <a href="admin-producto-form.html">➕ Nuevo Producto</a>
+            <a href="admin-usuarios.html">👥 Mantenedor Usuarios</a>
+            <a href="admin-usuario-form.html">➕ Nuevo Usuario</a>
+        </aside>
+
+        <!-- Área de contenido principal del Dashboard -->
+        <main class="admin-content-area">
+            <section aria-labelledby="titulo-dashboard">
+            <h2 id="titulo-dashboard" class="fw-bold mb-4">Dashboard Administrativo</h2>
+            <p class="text-muted mb-4">Bienvenido al panel de control de Veterinaria San Marcos. Desde aquí podrás supervisar los registros del sistema.</p>
+
+            <!-- Tarjetas de resumen estadístico -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card p-4 shadow-sm border-0 bg-white">
+                        <h6 class="text-muted">Productos Registrados</h6>
+                        <h3 class="fw-bold text-primary mb-0">12</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-4 shadow-sm border-0 bg-white">
+                        <h6 class="text-muted">Usuarios Activos</h6>
+                        <h3 class="fw-bold text-success mb-0">5</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-4 shadow-sm border-0 bg-white">
+                        <h6 class="text-muted">Citas Veterinarias Hoy</h6>
+                        <h3 class="fw-bold text-warning mb-0">8</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accesos rápidos a los mantenedores -->
+            <div class="card p-4 shadow-sm border-0 bg-white">
+                <h4 class="fw-bold mb-3">Acceso Rápido a Mantenedores</h4>
+                <p class="text-muted">Selecciona una opción para administrar los recursos del sistema según tu rol asignado.</p>
+                <div class="d-flex gap-3 mt-2">
+                    <a href="admin-productos.html" class="btn btn-primary">Gestionar Productos</a>
+                    <a href="admin-usuarios.html" class="btn btn-outline-secondary">Gestionar Usuarios</a>
+                </div>
+            </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Veterinaria San Marcos. Todos los derechos reservados. | Docente: Hernan Saavedra (DSY1104)</p>
+        <p>Desarrolladores: Mauro Santiago (mau.santiago@duocuc.cl) | Gabriel González (gabre.gonzalez@duocuc.cl)</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/funciones.js"></script>
+</body>
+</html>

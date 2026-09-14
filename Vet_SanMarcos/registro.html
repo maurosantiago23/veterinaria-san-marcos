@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinaria San Marcos - Registro de Usuario</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Nuestra hoja de estilos personalizada -->
+    <link rel="stylesheet" href="assets/css/estilos.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="logo-container">
+            <h1 class="site-title">Veterinaria San Marcos</h1>
+            <p class="site-subtitle">Registro de Nuevos Clientes</p>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="blogs.html">Blogs</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="login.html">Iniciar Sesión</a></li>
+                <li><a href="registro.html" class="active">Registro</a></li>
+                <li><a href="carrito.html" class="cart-link">🛒 Carrito (<span id="cart-count">0</span>)</a></li>
+                <li><a href="admin-home.html" class="admin-link">Panel Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        
+        <section class="container my-5" style="max-width: 600px;" aria-labelledby="titulo-registro">
+            <div class="bg-white p-4 rounded shadow-sm">
+            <h2 id="titulo-registro" class="mb-4 text-center fw-bold">Registro de Usuario</h2>
+                <p class="text-muted text-center mb-4">Crea tu cuenta para agendar horas veterinarias y gestionar las compras de tus mascotas.</p>
+                
+                <!-- Formulario de Registro con validaciones en JS -->
+                <form id="form-registro" novalidate>
+                    
+                    <div class="mb-3">
+                        <label for="txt-run" class="form-label fw-semibold">RUN / RUT (Sin puntos ni guion, ej: 19011022K):</label>
+                        <input type="text" id="txt-run" class="form-control" maxlength="9" placeholder="Ej: 19011022K" required>
+                        <div id="error-run" class="text-danger small mt-1"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="txt-nombre" class="form-label fw-semibold">Nombre Completo:</label>
+                        <input type="text" id="txt-nombre" class="form-control" placeholder="Ej: Mauro Santiago" required>
+                        <div id="error-nombre" class="text-danger small mt-1"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="txt-email" class="form-label fw-semibold">Correo Electrónico (@duoc.cl, @profesor.duoc.cl, @gmail.com):</label>
+                        <input type="email" id="txt-email" class="form-control" maxlength="100" placeholder="tucorreo@gmail.com" required>
+                        <div id="error-email" class="text-danger small mt-1"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="txt-password" class="form-label fw-semibold">Contraseña (4 a 10 caracteres):</label>
+                        <input type="password" id="txt-password" class="form-control" maxlength="10" placeholder="••••••••" required>
+                        <div id="error-password" class="text-danger small mt-1"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="select-region" class="form-label fw-semibold">Región:</label>
+                        <select id="select-region" class="form-select" required>
+                            <option value="">Seleccione una región...</option>
+                            <option value="Metropolitana">Región Metropolitana de Santiago</option>
+                            <option value="Valparaiso">Región de Valparaíso</option>
+                            <option value="O_Higgins">Región del Libertador General Bernardo O'Higgins</option>
+                        </select>
+                        <div id="error-region" class="text-danger small mt-1"></div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="txt-direccion" class="form-label fw-semibold">Dirección:</label>
+                        <input type="text" id="txt-direccion" class="form-control" placeholder="Ej: Av. Principal 123" required>
+                        <div id="error-direccion" class="text-danger small mt-1"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">Registrarse</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Veterinaria San Marcos. Todos los derechos reservados. | Asignatura DSY1104 - Desarrollo Fullstack II</p>
+        <p>Dirección: Av. Vicuña Mackenna 491, Santiago | Teléfono: +56 2 2999 8888</p>
+    </footer>
+
+    <!-- Script de validación de formulario en JavaScript Nativo -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            actualizarContadorCarrito();
+
+            const form = document.getElementById('form-registro');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Evitar envío automático para validar por JS
+
+                // Limpiar mensajes de error previos
+                document.getElementById('error-run').textContent = '';
+                document.getElementById('error-nombre').textContent = '';
+                document.getElementById('error-email').textContent = '';
+                document.getElementById('error-password').textContent = '';
+                document.getElementById('error-region').textContent = '';
+                document.getElementById('error-direccion').textContent = '';
+
+                let esValido = true;
+
+                // 1. Validar RUN: 7 a 9 caracteres sin puntos ni guion
+                const run = document.getElementById('txt-run').value.trim();
+                if (run.length < 7 || run.length > 9) {
+                    document.getElementById('error-run').textContent = 'El RUN debe tener entre 7 y 9 caracteres (sin puntos ni guion).';
+                    esValido = false;
+                }
+
+                // 2. Validar Nombre
+                const nombre = document.getElementById('txt-nombre').value.trim();
+                if (nombre === '') {
+                    document.getElementById('error-nombre').textContent = 'El nombre completo es obligatorio.';
+                    esValido = false;
+                }
+
+                // 3. Validar Correo: Máx 100 caracteres y dominios permitidos (@duoc.cl, @profesor.duoc.cl, @gmail.com)
+                const email = document.getElementById('txt-email').value.trim();
+                const dominiosPermitidos = ['@duoc.cl', '@profesor.duoc.cl', '@gmail.com'];
+                let dominioValido = dominiosPermitidos.some(dom => email.endsWith(dom));
+
+                if (email === '' || email.length > 100 || !dominioValido) {
+                    document.getElementById('error-email').textContent = 'El correo debe tener máximo 100 caracteres y pertenecer a @duoc.cl, @profesor.duoc.cl o @gmail.com.';
+                    esValido = false;
+                }
+
+                // 4. Validar Contraseña: Entre 4 y 10 caracteres
+                const password = document.getElementById('txt-password').value;
+                if (password.length < 4 || password.length > 10) {
+                    document.getElementById('error-password').textContent = 'La contraseña debe tener entre 4 y 10 caracteres.';
+                    esValido = false;
+                }
+
+                // 5. Validar Región
+                const region = document.getElementById('select-region').value;
+                if (region === '') {
+                    document.getElementById('error-region').textContent = 'Debe seleccionar una región.';
+                    esValido = false;
+                }
+
+                // 6. Validar Dirección
+                const direccion = document.getElementById('txt-direccion').value.trim();
+                if (direccion === '') {
+                    document.getElementById('error-direccion').textContent = 'La dirección es obligatoria.';
+                    esValido = false;
+                }
+
+                // Si todo es correcto
+                if (esValido) {
+                    alert('¡Registro exitoso! Sus datos han sido validados correctamente.');
+                    form.reset();
+                    // Opcional: Redirigir al login
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+
+        function actualizarContadorCarrito() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartCountElement = document.getElementById('cart-count');
+            if(cartCountElement) {
+                cartCountElement.textContent = totalItems;
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/funciones.js"></script>
+</body>
+</html>

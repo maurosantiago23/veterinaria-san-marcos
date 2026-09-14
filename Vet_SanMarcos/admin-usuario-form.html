@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinaria San Marcos - Formulario de Usuario</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Nuestra hoja de estilos personalizada -->
+    <link rel="stylesheet" href="assets/css/estilos.css">
+    <style>
+        .admin-wrapper { display: flex; min-height: calc(100vh - 140px); }
+        .admin-sidebar { width: 250px; background-color: #1e293b; color: #ffffff; padding: 20px; }
+        .admin-sidebar a { color: #cbd5e1; text-decoration: none; display: block; padding: 10px 15px; border-radius: 5px; margin-bottom: 5px; }
+        .admin-sidebar a:hover, .admin-sidebar a.active { background-color: #0f172a; color: #ffffff; }
+        .admin-content-area { flex-grow: 1; padding: 30px; background-color: #f8fafc; }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="logo-container">
+            <h1 class="site-title">Veterinaria San Marcos</h1>
+            <p class="site-subtitle">Gestión de Usuarios y Roles (RBAC)</p>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Ver Sitio Web</a></li>
+                <li><a href="login.html">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="admin-wrapper">
+        <!-- Sidebar de navegación administrativa -->
+        <aside class="admin-sidebar">
+            <h5 class="text-uppercase fs-6 text-secondary mb-3 fw-bold">Menú Principal</h5>
+            <a href="admin-home.html">📊 Dashboard</a>
+            <a href="admin-productos.html">📦 Mantenedor Productos</a>
+            <a href="admin-producto-form.html">➕ Nuevo Producto</a>
+            <a href="admin-usuarios.html">👥 Mantenedor Usuarios</a>
+            <a href="admin-usuario-form.html" class="active">➕ Nuevo Usuario</a>
+        </aside>
+
+        <!-- Área de contenido principal -->
+        <main class="admin-content-area">
+            <section class="container" style="max-width: 700px;" aria-labelledby="titulo-usuario-form">
+                <div class="bg-white p-4 rounded shadow-sm">
+                    <h2 id="titulo-usuario-form" class="fw-bold mb-3 text-center">Registrar o Editar Usuario</h2>
+                    <p class="text-muted text-center mb-4">Complete los campos y asigne el rol correspondiente en el sistema.</p>
+
+                    <!-- Formulario de Usuario con validación en JS -->
+                    <form id="form-usuario-admin" novalidate>
+                        
+                        <div class="mb-3">
+                            <label for="admin-run" class="form-label fw-semibold">RUN / RUT (7 a 9 caracteres, sin puntos ni guion):</label>
+                            <input type="text" id="admin-run" class="form-control" maxlength="9" placeholder="Ej: 19011022K" required>
+                            <div id="error-admin-run" class="text-danger small mt-1"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="admin-nombre" class="form-label fw-semibold">Nombre Completo:</label>
+                            <input type="text" id="admin-nombre" class="form-control" placeholder="Ej: Gabriel González" required>
+                            <div id="error-admin-nombre" class="text-danger small mt-1"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="admin-email" class="form-label fw-semibold">Correo Electrónico (@duoc.cl, @profesor.duoc.cl, @gmail.com):</label>
+                            <input type="email" id="admin-email" class="form-control" maxlength="100" placeholder="correo@duoc.cl" required>
+                            <div id="error-admin-email" class="text-danger small mt-1"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="admin-password" class="form-label fw-semibold">Contraseña (4 a 10 caracteres):</label>
+                            <input type="password" id="admin-password" class="form-control" maxlength="10" placeholder="••••••••" required>
+                            <div id="error-admin-password" class="text-danger small mt-1"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="admin-rol" class="form-label fw-semibold">Rol del Sistema (RBAC):</label>
+                            <select id="admin-rol" class="form-select" required>
+                                <option value="">Seleccione un rol...</option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Vendedor">Vendedor</option>
+                                <option value="Cliente">Cliente</option>
+                            </select>
+                            <div id="error-admin-rol" class="text-danger small mt-1"></div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary flex-grow-1 py-2 fw-semibold">Guardar Usuario</button>
+                            <a href="admin-usuarios.html" class="btn btn-outline-secondary py-2">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Veterinaria San Marcos. Todos los derechos reservados. | Docente: Hernan Saavedra (DSY1104)</p>
+        <p>Desarrolladores: Mauro Santiago (mau.santiago@duocuc.cl) | Gabriel González (gabre.gonzalez@duocuc.cl)</p>
+    </footer>
+
+    <!-- Script de validación para el formulario de usuario admin -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const formUsuario = document.getElementById('form-usuario-admin');
+            formUsuario.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                document.getElementById('error-admin-run').textContent = '';
+                document.getElementById('error-admin-nombre').textContent = '';
+                document.getElementById('error-admin-email').textContent = '';
+                document.getElementById('error-admin-password').textContent = '';
+                document.getElementById('error-admin-rol').textContent = '';
+
+                let esValido = true;
+
+                // Validar RUN
+                const run = document.getElementById('admin-run').value.trim();
+                if (run.length < 7 || run.length > 9) {
+                    document.getElementById('error-admin-run').textContent = 'El RUN debe tener entre 7 y 9 caracteres.';
+                    esValido = false;
+                }
+
+                // Validar Nombre
+                const nombre = document.getElementById('admin-nombre').value.trim();
+                if (nombre === '') {
+                    document.getElementById('error-admin-nombre').textContent = 'El nombre completo es obligatorio.';
+                    esValido = false;
+                }
+
+                // Validar Correo
+                const email = document.getElementById('admin-email').value.trim();
+                const dominiosPermitidos = ['@duoc.cl', '@profesor.duoc.cl', '@gmail.com'];
+                let dominioValido = dominiosPermitidos.some(dom => email.endsWith(dom));
+
+                if (email === '' || email.length > 100 || !dominioValido) {
+                    document.getElementById('error-admin-email').textContent = 'Correo inválido (máx. 100 caracteres y dominios permitidos).';
+                    esValido = false;
+                }
+
+                // Validar Contraseña
+                const password = document.getElementById('admin-password').value;
+                if (password.length < 4 || password.length > 10) {
+                    document.getElementById('error-admin-password').textContent = 'La contraseña debe tener entre 4 y 10 caracteres.';
+                    esValido = false;
+                }
+
+                // Validar Rol
+                const rol = document.getElementById('admin-rol').value;
+                if (rol === '') {
+                    document.getElementById('error-admin-rol').textContent = 'Debe seleccionar un rol para el usuario.';
+                    esValido = false;
+                }
+
+                if (esValido) {
+                    alert('¡Usuario registrado y validado con éxito en el sistema!');
+                    formUsuario.reset();
+                    window.location.href = 'admin-usuarios.html';
+                }
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/funciones.js"></script>
+</body>
+</html>

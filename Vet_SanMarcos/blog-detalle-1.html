@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinaria San Marcos - Importancia de la Vacunación</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/estilos.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="logo-container">
+            <h1 class="site-title">Veterinaria San Marcos</h1>
+            <p class="site-subtitle">Artículo de Blog</p>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="blogs.html" class="active">Blogs</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="login.html">Iniciar Sesión</a></li>
+                <li><a href="registro.html">Registro</a></li>
+                <li><a href="carrito.html" class="cart-link">🛒 Carrito (<span id="cart-count">0</span>)</a></li>
+                <li><a href="admin-home.html" class="admin-link">Panel Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="container my-5" style="max-width: 800px;">
+            <article class="bg-white p-5 rounded shadow-sm">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="blogs.html">Blogs</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Artículo 1</li>
+                    </ol>
+                </nav>
+
+                <h1 class="fw-bold mb-3">Importancia del Calendario de Vacunación al Día</h1>
+                <p class="text-muted small mb-4">Publicado el 10 de Marzo de 2026 | Por Dr. Hernán Saavedra</p>
+                
+                <img src="https://placehold.co/800x400/f8fafc/334155?text=Vacunacion+Mascotas+Detalle" alt="Vacunación en mascotas" class="img-fluid rounded mb-4">
+
+                <div class="content-body">
+                    <p class="lead">La inmunización preventiva es el pilar fundamental para garantizar que nuestros perros y gatos tengan una vida larga, sana y libre de enfermedades infecciosas graves.</p>
+                    <p>Muchas de las patologías virales más comunes en animales domésticos, como el parvovirus canino o el distemper, son altamente contagiosas y, en muchos casos, letales si no se detectan o previenen a tiempo. Las vacunas actúan estimulando el sistema inmunológico de la mascota para que produzca anticuerpos específicos sin necesidad de enfermar.</p>
+                    
+                    <h4 class="fw-bold mt-4 mb-3">¿Qué debemos tener en cuenta?</h4>
+                    <ul>
+                        <li><strong>Primera dosis en cachorros:</strong> Se comienza generalmente entre las 6 y 8 semanas de vida.</li>
+                        <li><strong>Refuerzos anuales:</strong> Las vacunas pierden efectividad con el tiempo, por lo que el refuerzo anual es obligatorio.</li>
+                        <li><strong>Desparasitación previa:</strong> Es vital que el paciente esté desparasitado internamente antes de recibir cualquier inmunización.</li>
+                    </ul>
+
+                    <p class="mt-4">Acércate a nuestra clínica en Av. Vicuña Mackenna 491 o agenda una consulta general con nuestros profesionales para evaluar el carnet de vacunas de tu compañero.</p>
+                </div>
+
+                <div class="mt-5 pt-3 border-top">
+                    <a href="blogs.html" class="btn btn-outline-secondary">← Volver a los Blogs</a>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Veterinaria San Marcos. Todos los derechos reservados. | Asignatura DSY1104 - Desarrollo Fullstack II</p>
+        <p>Dirección: Av. Vicuña Mackenna 491, Santiago | Teléfono: +56 2 2999 8888</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartCountElement = document.getElementById('cart-count');
+            if(cartCountElement) cartCountElement.textContent = totalItems;
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/funciones.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinaria San Marcos - Formulario de Producto</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Nuestra hoja de estilos personalizada -->
+    <link rel="stylesheet" href="assets/css/estilos.css">
+    <style>
+        .admin-wrapper { display: flex; min-height: calc(100vh - 140px); }
+        .admin-sidebar { width: 250px; background-color: #1e293b; color: #ffffff; padding: 20px; }
+        .admin-sidebar a { color: #cbd5e1; text-decoration: none; display: block; padding: 10px 15px; border-radius: 5px; margin-bottom: 5px; }
+        .admin-sidebar a:hover, .admin-sidebar a.active { background-color: #0f172a; color: #ffffff; }
+        .admin-content-area { flex-grow: 1; padding: 30px; background-color: #f8fafc; }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="logo-container">
+            <h1 class="site-title">Veterinaria San Marcos</h1>
+            <p class="site-subtitle">Gestión de Inventario y Productos</p>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Ver Sitio Web</a></li>
+                <li><a href="login.html">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="admin-wrapper">
+        <!-- Sidebar de navegación administrativa -->
+        <aside class="admin-sidebar">
+            <h5 class="text-uppercase fs-6 text-secondary mb-3 fw-bold">Menú Principal</h5>
+            <a href="admin-home.html">📊 Dashboard</a>
+            <a href="admin-productos.html">📦 Mantenedor Productos</a>
+            <a href="admin-producto-form.html" class="active">➕ Nuevo Producto</a>
+            <a href="admin-usuarios.html">👥 Mantenedor Usuarios</a>
+            <a href="admin-usuario-form.html">➕ Nuevo Usuario</a>
+        </aside>
+
+        <!-- Área de contenido principal -->
+        <main class="admin-content-area">
+            <section class="container" style="max-width: 700px;" aria-labelledby="titulo-producto-form">
+                <div class="bg-white p-4 rounded shadow-sm">
+                    <h2 id="titulo-producto-form" class="fw-bold mb-3 text-center">Registrar o Editar Producto</h2>
+                    <p class="text-muted text-center mb-4">Complete los campos obligatorios para actualizar el inventario de la veterinaria.</p>
+
+                    <!-- Formulario de Producto con validación en JS -->
+                    <form id="form-producto" novalidate>
+                        
+                        <div class="mb-3">
+                            <label for="prod-codigo" class="form-label fw-semibold">Código del Producto (Ej: PRO-301):</label>
+                            <input type="text" id="prod-codigo" class="form-control" placeholder="PRO-301" required>
+                            <div id="error-prod-codigo" class="text-danger small mt-1"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="prod-titulo" class="form-label fw-semibold">Nombre del Producto:</label>
+                            <input type="text" id="prod-titulo" class="form-control" placeholder="Ej: Antiparasitario NexGard" required>
+                            <div id="error-prod-titulo" class="text-danger small mt-1"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="prod-categoria" class="form-label fw-semibold">Categoría:</label>
+                            <select id="prod-categoria" class="form-select" required>
+                                <option value="">Seleccione una categoría...</option>
+                                <option value="Farmacia">Farmacia</option>
+                                <option value="Alimentos">Alimentos</option>
+                                <option value="Servicios">Servicios</option>
+                            </select>
+                            <div id="error-prod-categoria" class="text-danger small mt-1"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="prod-precio" class="form-label fw-semibold">Precio (CLP):</label>
+                            <input type="number" id="prod-precio" class="form-control" min="0" placeholder="15000" required>
+                            <div id="error-prod-precio" class="text-danger small mt-1"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="prod-stock" class="form-label fw-semibold">Stock Actual:</label>
+                            <input type="number" id="prod-stock" class="form-control" min="0" placeholder="10" required>
+                            <div id="error-prod-stock" class="text-danger small mt-1"></div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary flex-grow-1 py-2 fw-semibold">Guardar Producto</button>
+                            <a href="admin-productos.html" class="btn btn-outline-secondary py-2">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Veterinaria San Marcos. Todos los derechos reservados. | Docente: Hernan Saavedra (DSY1104)</p>
+        <p>Desarrolladores: Mauro Santiago (mau.santiago@duocuc.cl) | Gabriel González (gabre.gonzalez@duocuc.cl)</p>
+    </footer>
+
+    <!-- Script de validación para el formulario de producto -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const formProducto = document.getElementById('form-producto');
+            formProducto.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                document.getElementById('error-prod-codigo').textContent = '';
+                document.getElementById('error-prod-titulo').textContent = '';
+                document.getElementById('error-prod-categoria').textContent = '';
+                document.getElementById('error-prod-precio').textContent = '';
+                document.getElementById('error-prod-stock').textContent = '';
+
+                let esValido = true;
+
+                const codigo = document.getElementById('prod-codigo').value.trim();
+                if (codigo === '') {
+                    document.getElementById('error-prod-codigo').textContent = 'El código del producto es obligatorio.';
+                    esValido = false;
+                }
+
+                const titulo = document.getElementById('prod-titulo').value.trim();
+                if (titulo === '') {
+                    document.getElementById('error-prod-titulo').textContent = 'El nombre del producto es obligatorio.';
+                    esValido = false;
+                }
+
+                const categoria = document.getElementById('prod-categoria').value;
+                if (categoria === '') {
+                    document.getElementById('error-prod-categoria').textContent = 'Debe seleccionar una categoría.';
+                    esValido = false;
+                }
+
+                const precio = parseFloat(document.getElementById('prod-precio').value);
+                if (isNaN(precio) || precio < 0) {
+                    document.getElementById('error-prod-precio').textContent = 'El precio debe ser mayor o igual a 0.';
+                    esValido = false;
+                }
+
+                const stock = parseInt(document.getElementById('prod-stock').value);
+                if (isNaN(stock) || stock < 0) {
+                    document.getElementById('error-prod-stock').textContent = 'El stock debe ser un número entero mayor o igual a 0.';
+                    esValido = false;
+                }
+
+                if (esValido) {
+                    alert('¡Producto guardado y validado con éxito en el inventario!');
+                    formProducto.reset();
+                    window.location.href = 'admin-productos.html';
+                }
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/funciones.js"></script>
+</body>
+</html>
