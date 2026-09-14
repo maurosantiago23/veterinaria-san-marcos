@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinaria San Marcos - Detalle de Producto</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Nuestra hoja de estilos personalizada -->
+    <link rel="stylesheet" href="assets/css/estilos.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="logo-container">
+            <h1 class="site-title">Veterinaria San Marcos</h1>
+            <p class="site-subtitle">Detalle del Producto</p>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="blogs.html">Blogs</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="login.html">Iniciar Sesión</a></li>
+                <li><a href="registro.html">Registro</a></li>
+                <li><a href="carrito.html" class="cart-link">🛒 Carrito (<span id="cart-count">0</span>)</a></li>
+                <li><a href="admin-home.html" class="admin-link">Panel Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        
+        <div class="container my-5">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="productos.html">Productos</a></li>
+                    <li class="breadcrumb-item active" id="breadcrumb-title" aria-current="page">Detalle</li>
+                </ol>
+            </nav>
+
+            <div class="row g-5 align-items-center bg-white p-4 rounded shadow-sm">
+                <!-- Imagen grande del producto -->
+                <div class="col-md-6 text-center">
+                    <img id="prod-img" src="https://placehold.co/400x300/f8fafc/334155?text=Cargando..." alt="Imagen del producto" class="img-fluid rounded border">
+                </div>
+
+                <!-- Información y lógica de compra / añadir al carrito -->
+                <div class="col-md-6">
+                    <h2 id="prod-nombre" class="fw-bold mb-3">Cargando producto...</h2>
+                    <h4 id="prod-precio" class="text-primary fw-semibold mb-3">$ 0 CLP</h4>
+                    <p id="prod-desc" class="text-muted mb-4">Espere un momento mientras cargamos la información detallada del artículo seleccionado.</p>
+                    
+                    <div class="mb-3">
+                        <label for="cantidad" class="form-label fw-bold">Cantidad:</label>
+                        <input type="number" id="cantidad" class="form-control w-25" value="1" min="1" max="10">
+                    </div>
+
+                    <button id="btn-add-cart" class="btn btn-primary btn-lg px-4 me-2">Añadir al Carrito</button>
+                    <a href="productos.html" class="btn btn-outline-secondary btn-lg">Volver al Catálogo</a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Veterinaria San Marcos. Todos los derechos reservados. | Asignatura DSY1104 - Desarrollo Fullstack II</p>
+        <p>Dirección: Av. Vicuña Mackenna 491, Santiago | Teléfono: +56 2 2999 8888</p>
+    </footer>
+
+    <!-- Script para simular la carga de datos por parámetro y guardar en localStorage -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Actualizar contador del carrito
+            actualizarContadorCarrito();
+
+            // Simulación de base de datos local en JS para el detalle dinámico
+            const productosBD = {
+                "SRV-001": { nombre: "Consulta Veterinaria General", precio: 25000, desc: "Evaluación clínica integral y revisión de constantes vitales realizadas por médicos veterinarios titulados.", img: "https://placehold.co/400x300/f8fafc/334155?text=Consulta+General" },
+                "FAR-103": { nombre: "Simparica 10-20 kg", precio: 21000, desc: "Comprimido masticable altamente palatable para el control eficaz y prolongado de pulgas, garrapatas y sarna.", img: "https://placehold.co/400x300/f8fafc/334155?text=Simparica+20kg" },
+                "PRO-201": { nombre: "Alimento Perro Adulto Salmón 3 kg", precio: 19990, desc: "Alimento súper premium formulado con proteínas de alta digestibilidad, ácidos grasos Omega 3 y 6 para un pelaje brillante.", img: "https://placehold.co/400x300/f8fafc/334155?text=Alimento+Salon" },
+                "FAR-104": { nombre: "NexGard Spectra Perros Medianos", precio: 23500, desc: "Protección mensual completa contra parásitos externos (pulgas y garrapatas) e internos (gusano del corazón y nemátodos).", img: "https://placehold.co/400x300/f8fafc/334155?text=NexGard+Spectra" },
+                "PRO-202": { nombre: "Snack Dental Felino 60g", precio: 4990, desc: "Premios crujientes diseñados específicamente para ayudar a reducir la acumulación de sarro dental en gatos adultos.", img: "https://placehold.co/400x300/f8fafc/334155?text=Snack+Dental" },
+                "SRV-002": { nombre: "Peluquería y Baño Sanitario", precio: 18000, desc: "Servicio profesional que incluye corte de pelo según estándar de raza, baño con productos hipoalergénicos, secado y corte de uñas.", img: "https://placehold.co/400x300/f8fafc/334155?text=Peluqueria+Canina" }
+            };
+
+            // Capturar el parámetro 'id' de la URL (ej: detalle-producto.html?id=FAR-103)
+            const urlParams = new URLSearchParams(window.location.search);
+            const prodId = urlParams.get('id') || 'SRV-001'; // Por defecto muestra la consulta si no hay id
+
+            const producto = productosBD[prodId] || productosBD["SRV-001"];
+
+            // Inyectar datos en el HTML de la vista
+            document.getElementById('prod-nombre').textContent = producto.nombre;
+            document.getElementById('breadcrumb-title').textContent = producto.nombre;
+            document.getElementById('prod-precio').textContent = `$ ${producto.precio.toLocaleString('es-CL')} CLP`;
+            document.getElementById('prod-desc').textContent = producto.desc;
+            document.getElementById('prod-img').src = producto.img;
+            document.getElementById('prod-img').alt = producto.nombre;
+
+            // Evento para añadir al carrito y guardar en localStorage
+            const btnAdd = document.getElementById('btn-add-cart');
+            btnAdd.addEventListener('click', function() {
+                const cantidad = parseInt(document.getElementById('cantidad').value) || 1;
+                
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                
+                // Buscar si el producto ya está en el carrito
+                const index = cart.findIndex(item => item.id === prodId);
+                if (index > -1) {
+                    cart[index].quantity += cantidad;
+                } else {
+                    cart.push({
+                        id: prodId,
+                        name: producto.nombre,
+                        price: producto.precio,
+                        quantity: cantidad,
+                        image: producto.img
+                    });
+                }
+
+                // Guardar en LocalStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+                actualizarContadorCarrito();
+
+                alert(`¡Se han añadido ${cantidad} unidad(es) de "${producto.nombre}" al carrito!`);
+            });
+        });
+
+        function actualizarContadorCarrito() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartCountElement = document.getElementById('cart-count');
+            if(cartCountElement) {
+                cartCountElement.textContent = totalItems;
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

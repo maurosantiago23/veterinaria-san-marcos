@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinaria San Marcos - Catálogo de Productos</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Nuestra hoja de estilos personalizada -->
+    <link rel="stylesheet" href="assets/css/estilos.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="logo-container">
+            <h1 class="site-title">Veterinaria San Marcos</h1>
+            <p class="site-subtitle">Catálogo de Productos y Medicamentos Veterinarios</p>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="productos.html" class="active">Productos</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+                <li><a href="blogs.html">Blogs</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="login.html">Iniciar Sesión</a></li>
+                <li><a href="registro.html">Registro</a></li>
+                <li><a href="carrito.html" class="cart-link">🛒 Carrito (<span id="cart-count">0</span>)</a></li>
+                <li><a href="admin-home.html" class="admin-link">Panel Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        
+        <section class="catalog-header">
+            <h2>Catálogo General de Productos y Servicios</h2>
+            <p>Explora todos nuestros productos disponibles para el cuidado, alimentación y salud de tu mascota.</p>
+            
+            <!-- Filtros básicos opcionales -->
+            <div class="filter-bar my-4">
+                <button class="btn btn-outline-primary btn-sm active" onclick="filtrarProductos('todos')">Todos</button>
+                <button class="btn btn-outline-primary btn-sm" onclick="filtrarProductos('farmacia')">Farmacia</button>
+                <button class="btn btn-outline-primary btn-sm" onclick="filtrarProductos('alimentos')">Alimentos</button>
+                <button class="btn btn-outline-primary btn-sm" onclick="filtrarProductos('servicios')">Servicios</button>
+            </div>
+        </section>
+
+        <!-- Grilla completa de productos -->
+        <section class="catalog-grid">
+            <div class="product-grid">
+                
+                <!-- Producto 1 -->
+                <article class="product-card" data-category="servicios">
+                    <img src="https://placehold.co/300x200/f8fafc/334155?text=Consulta+General" alt="Consulta Veterinaria General" class="img-responsive">
+                    <h3>Consulta Veterinaria General</h3>
+                    <p class="product-price">$ 25.000 CLP</p>
+                    <p class="product-desc">Evaluación clínica integral y revisión de constantes vitales.</p>
+                    <a href="detalle-producto.html?id=SRV-001" class="btn-secondary">Ver Detalle</a>
+                </article>
+
+                <!-- Producto 2 -->
+                <article class="product-card" data-category="farmacia">
+                    <img src="https://placehold.co/300x200/f8fafc/334155?text=Simparica+20kg" alt="Simparica Antiparasitario" class="img-responsive">
+                    <h3>Simparica 10-20 kg</h3>
+                    <p class="product-price">$ 21.000 CLP</p>
+                    <p class="product-desc">Comprimido masticable para control eficaz de pulgas y garrapatas.</p>
+                    <a href="detalle-producto.html?id=FAR-103" class="btn-secondary">Ver Detalle</a>
+                </article>
+
+                <!-- Producto 3 -->
+                <article class="product-card" data-category="alimentos">
+                    <img src="https://placehold.co/300x200/f8fafc/334155?text=Alimento+Salmon" alt="Alimento Perro Adulto Salmón" class="img-responsive">
+                    <h3>Alimento Perro Adulto Salmón 3 kg</h3>
+                    <p class="product-price">$ 19.990 CLP</p>
+                    <p class="product-desc">Alimento súper premium formulado para razas medianas.</p>
+                    <a href="detalle-producto.html?id=PRO-201" class="btn-secondary">Ver Detalle</a>
+                </article>
+
+                <!-- Producto 4 -->
+                <article class="product-card" data-category="farmacia">
+                    <img src="https://placehold.co/300x200/f8fafc/334155?text=NexGard+Spectra" alt="NexGard Spectra" class="img-responsive">
+                    <h3>NexGard Spectra Perros Medianos</h3>
+                    <p class="product-price">$ 23.500 CLP</p>
+                    <p class="product-desc">Protección mensual contra parásitos externos e internos.</p>
+                    <a href="detalle-producto.html?id=FAR-104" class="btn-secondary">Ver Detalle</a>
+                </article>
+
+                <!-- Producto 5 -->
+                <article class="product-card" data-category="alimentos">
+                    <img src="https://placehold.co/300x200/f8fafc/334155?text=Snack+Dental" alt="Snack Dental Gatos" class="img-responsive">
+                    <h3>Snack Dental Felino 60g</h3>
+                    <p class="product-price">$ 4.990 CLP</p>
+                    <p class="product-desc">Premios crujientes diseñados para reducir el sarro dental.</p>
+                    <a href="detalle-producto.html?id=PRO-202" class="btn-secondary">Ver Detalle</a>
+                </article>
+
+                <!-- Producto 6 -->
+                <article class="product-card" data-category="servicios">
+                    <img src="https://placehold.co/300x200/f8fafc/334155?text=Peluqueria+Canina" alt="Peluquería Canina" class="img-responsive">
+                    <h3>Peluquería y Baño Sanitario</h3>
+                    <p class="product-price">$ 18.000 CLP</p>
+                    <p class="product-desc">Incluye corte de pelo según raza, baño hipoalergénico y corte de uñas.</p>
+                    <a href="detalle-producto.html?id=SRV-002" class="btn-secondary">Ver Detalle</a>
+                </article>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Veterinaria San Marcos. Todos los derechos reservados. | Asignatura DSY1104 - Desarrollo Fullstack II</p>
+        <p>Dirección: Av. Vicuña Mackenna 491, Santiago | Teléfono: +56 2 2999 8888</p>
+    </footer>
+
+    <!-- Script de sincronización del carrito y filtros básicos -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Actualizar contador del carrito
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartCountElement = document.getElementById('cart-count');
+            if(cartCountElement) {
+                cartCountElement.textContent = totalItems;
+            }
+        });
+
+        // Función simple para filtrar productos en pantalla
+        function filtrarProductos(categoria) {
+            const tarjetas = document.querySelectorAll('.product-card');
+            tarjetas.forEach(card => {
+                if (categoria === 'todos' || card.getAttribute('data-category') === categoria) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
