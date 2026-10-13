@@ -36,7 +36,7 @@ El proyecto presenta una tienda online de productos y servicios veterinarios, ju
 ```text
 veterinaria-san-marcos/
 ├── README.md
-└── Vet_SanMarcos/
+├── Vet_SanMarcos/
 	├── index.html
 	├── productos.html
 	├── detalle-producto.html
@@ -57,6 +57,15 @@ veterinaria-san-marcos/
 	└── assets/
 		├── css/estilos.css
 		└── js/funciones.js
+└── Vet_SanMarcos_React/
+	├── package.json
+	├── index.html
+	└── src/
+		├── App.jsx
+		├── main.jsx
+		├── components/
+		├── pages/
+		└── index.css
 ```
 
 ## Ejecución local
@@ -76,6 +85,26 @@ http://localhost:8081/index.html
 También se puede utilizar la extensión **Live Server** de VS Code.
 
 Para detener el servidor en la terminal, presiona `Ctrl + C`.
+
+## Unidad 2: React y Vite
+
+La carpeta `Vet_SanMarcos_React` es el punto de partida de Unidad 2. La versión original de Unidad 1 permanece intacta en `Vet_SanMarcos`.
+
+El starter incluye rutas para Inicio, Productos y Login, un Navbar compartido y un componente reutilizable para mostrar productos estáticos. No incluye todavía carrito, autenticación ni backend.
+
+Requisitos: tener Node.js y npm instalados. Comprueba que estén disponibles y ejecuta desde la raíz del repositorio:
+
+```powershell
+node --version
+npm --version
+cd Vet_SanMarcos_React
+npm install
+npm run dev
+```
+
+Vite mostrará la dirección local para abrir en el navegador, normalmente `http://localhost:5173/`. Los demás comandos y la estructura de esta etapa están documentados en `Vet_SanMarcos_React/README.md`.
+
+Para generar una compilación de producción, ejecuta `npm run build` dentro de `Vet_SanMarcos_React`.
 
 ## Datos de prueba
 

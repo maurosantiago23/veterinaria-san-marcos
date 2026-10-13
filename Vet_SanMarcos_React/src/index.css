@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Outfit:wght@400;500;600;700&display=swap');
+
+:root {
+  font-family: 'Nunito Sans', Arial, sans-serif;
+  color: #263238;
+  background: #edf1f2;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: #edf1f2;
+}
+
+h1,
+h2,
+h3 {
+  color: #19324a;
+  font-family: 'Outfit', 'Trebuchet MS', sans-serif;
+  font-weight: 700;
+}
+
+.btn-primary {
+  --bs-btn-color: #ffffff;
+  --bs-btn-bg: #18566a;
+  --bs-btn-border-color: #18566a;
+  --bs-btn-hover-color: #ffffff;
+  --bs-btn-hover-bg: #124657;
+  --bs-btn-hover-border-color: #124657;
+}
+
+.site-navbar {
+  background-color: #19324a;
+}
+
+.site-navbar img {
+  object-fit: contain;
+}
+
+.home-intro {
+  max-width: 760px;
+  padding: 40px;
+  border: 1px solid #d1dadd;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.eyebrow {
+  color: #18566a;
+  font-weight: 700;
+}
+
+.product-card {
+  overflow: hidden;
+  border-color: #d1dadd;
+  box-shadow: 0 8px 20px rgba(25, 50, 74, 0.08);
+}
+
+.product-card .card-img-top {
+  height: 190px;
+  padding: 12px;
+  object-fit: contain;
+  background-color: #ffffff;
+}
+
+.site-footer {
+  padding: 18px;
+  background-color: #19324a;
+  color: #ffffff;
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 575px) {
+  .home-intro {
+    padding: 24px;
+  }
+
+  .site-navbar .container {
+    gap: 12px;
+  }
+}
