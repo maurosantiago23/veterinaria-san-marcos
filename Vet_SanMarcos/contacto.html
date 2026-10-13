@@ -50,7 +50,7 @@
 
                     <div class="mb-3">
                         <label for="contacto-email" class="form-label fw-semibold">Correo Electrónico:</label>
-                        <input type="email" id="contacto-email" class="form-control" maxlength="100" placeholder="tucorreo@duocuc.cl" required>
+                        <input type="email" id="contacto-email" class="form-control" maxlength="100" placeholder="correo@ejemplo.cl" required>
                         <div id="error-contacto-email" class="text-danger small mt-1"></div>
                     </div>
 
@@ -107,11 +107,8 @@
                 }
 
                 const email = document.getElementById('contacto-email').value.trim();
-                const dominiosPermitidos = ['@duocuc.cl', '@duoc.cl', '@profesor.duoc.cl', '@gmail.com'];
-                let dominioValido = dominiosPermitidos.some(dom => email.endsWith(dom));
-
-                if (email === '' || email.length > 100 || !dominioValido) {
-                    document.getElementById('error-contacto-email').textContent = 'Ingrese un correo válido (máx. 100 caracteres y dominios permitidos).';
+                if (!validarCorreo(email)) {
+                    document.getElementById('error-contacto-email').textContent = 'Ingresa un correo con formato nombre@dominio.cl. Se acepta cualquier proveedor con dominio válido.';
                     esValido = false;
                 }
 

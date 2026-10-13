@@ -35,11 +35,21 @@ function actualizarContadorCarrito() {
     }
 }
 
-// 2. Valida el formato de correo permitido por la pauta.
+// Acepta cualquier dominio con formato de correo válido, no solo proveedores conocidos.
 function validarCorreo(email) {
-    const dominiosPermitidos = ['@duoc.cl', '@profesor.duoc.cl', '@gmail.com', '@duocuc.cl'];
-    const esDominioValido = dominiosPermitidos.some(dom => email.endsWith(dom));
-    return email !== '' && email.length <= 100 && esDominioValido;
+    const correo = email.trim();
+    const partes = correo.split('@');
+
+    if (correo.length > 100 || partes.length !== 2) {
+        return false;
+    }
+
+    const [usuario, dominio] = partes;
+    const etiquetasDominio = dominio.split('.');
+    const usuarioValido = usuario !== '' && !usuario.startsWith('.') && !usuario.endsWith('.') && !usuario.includes('..') && /^[^\s@]+$/.test(usuario);
+    const dominioValido = etiquetasDominio.length >= 2 && etiquetasDominio.every(etiqueta => /^[a-z\d](?:[a-z\d-]*[a-z\d])?$/i.test(etiqueta)) && etiquetasDominio[etiquetasDominio.length - 1].length >= 2;
+
+    return usuarioValido && dominioValido;
 }
 
 // 3. Valida el largo del RUN solicitado por la pauta.
@@ -55,22 +65,32 @@ function validarPassword(password) {
 
 // Marca un campo inválido y escribe el mensaje en su contenedor dedicado.
 function mostrarErrorCampo(campo, mensaje) {
-    const error = document.getElementById(`error-${campo.id.replace('txt-', '').replace('select-', '')}`);
+    const error = obtenerContenedorError(campo);
     campo.classList.add('is-invalid');
+    campo.setAttribute('aria-invalid', 'true');
 
     if (error) {
+        error.classList.add('form-error', 'is-visible');
+        error.setAttribute('role', 'alert');
         error.textContent = mensaje;
     }
 }
 
 // Limpia el estado visual de un campo antes de volver a validarlo.
 function limpiarErrorCampo(campo) {
-    const error = document.getElementById(`error-${campo.id.replace('txt-', '').replace('select-', '')}`);
+    const error = obtenerContenedorError(campo);
     campo.classList.remove('is-invalid');
+    campo.removeAttribute('aria-invalid');
 
     if (error) {
+        error.classList.remove('is-visible');
         error.textContent = '';
     }
+}
+
+function obtenerContenedorError(campo) {
+    const grupo = campo.closest('.mb-3, .mb-4');
+    return grupo ? grupo.querySelector('[id^="error-"]') : null;
 }
 
 function validarCampo(campo, condicion, mensaje) {
@@ -165,15 +185,72 @@ function aplicarValidacionVisual(formulario, campos, validar) {
         return;
     }
 
-    formulario.addEventListener('submit', function() {
+    campos.forEach(function(campo) {
+        if (!campo) {
+            return;
+        }
+
+        const contenedorError = obtenerContenedorError(campo);
+        if (contenedorError) {
+            contenedorError.classList.add('form-error');
+        }
+
+        const validarCampoAlEditar = function() {
+            campo.dataset.validacionIniciada = 'true';
+            const valor = campo.value.trim();
+            let esValido = true;
+            let mensaje = '';
+
+            if (campo.type === 'email') {
+                esValido = validarCorreo(valor);
+                mensaje = 'Usa el formato nombre@dominio.cl. Se aceptan dominios válidos de cualquier proveedor, como Gmail, Hotmail o Duoc.';
+            } else if (campo.id.endsWith('run')) {
+                esValido = validarRun(valor);
+                mensaje = 'El RUN debe tener entre 7 y 9 caracteres.';
+            } else if (campo.type === 'password') {
+                esValido = validarPassword(campo.value);
+                mensaje = 'La contraseña debe tener entre 4 y 10 caracteres.';
+            } else if (campo.type === 'number') {
+                const numero = Number(campo.value);
+                esValido = campo.value !== '' && Number.isFinite(numero) && numero >= 0;
+                if (campo.id === 'prod-stock') {
+                    esValido = esValido && Number.isInteger(numero);
+                }
+                mensaje = campo.id === 'prod-stock'
+                    ? 'El stock debe ser un número entero igual o mayor que 0.'
+                    : 'Ingresa un número igual o mayor que 0.';
+            } else if (campo.tagName === 'SELECT') {
+                esValido = valor !== '';
+                mensaje = 'Selecciona una opción para continuar.';
+            } else {
+                esValido = !campo.required || valor !== '';
+                mensaje = 'Este campo es obligatorio.';
+            }
+
+            validarCampo(campo, esValido, mensaje);
+        };
+
+        campo.addEventListener('input', validarCampoAlEditar);
+        campo.addEventListener('change', validarCampoAlEditar);
+        campo.addEventListener('blur', function() {
+            if (campo.value.trim() !== '' || campo.dataset.validacionIniciada === 'true') {
+                validarCampoAlEditar();
+            }
+        });
+    });
+
+    formulario.addEventListener('submit', function(event) {
         campos.forEach(function(campo) {
             if (campo) {
+                campo.dataset.validacionIniciada = 'true';
                 limpiarErrorCampo(campo);
             }
         });
 
-        validar();
-    });
+        if (!validar()) {
+            event.preventDefault();
+        }
+    }, true);
 }
 
 // Ejecuta las mejoras compartidas cuando el documento termina de cargar.

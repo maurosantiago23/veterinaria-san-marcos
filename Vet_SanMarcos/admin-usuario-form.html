@@ -66,8 +66,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="admin-email" class="form-label fw-semibold">Correo Electrónico (@duoc.cl, @profesor.duoc.cl, @gmail.com):</label>
-                            <input type="email" id="admin-email" class="form-control" maxlength="100" placeholder="correo@duoc.cl" required>
+                            <label for="admin-email" class="form-label fw-semibold">Correo Electrónico (ejemplo: nombre@dominio.cl):</label>
+                            <input type="email" id="admin-email" class="form-control" maxlength="100" placeholder="correo@ejemplo.cl" required>
                             <div id="error-admin-email" class="text-danger small mt-1"></div>
                         </div>
 
@@ -134,11 +134,8 @@
 
                 // Validar Correo
                 const email = document.getElementById('admin-email').value.trim();
-                const dominiosPermitidos = ['@duoc.cl', '@profesor.duoc.cl', '@gmail.com'];
-                let dominioValido = dominiosPermitidos.some(dom => email.endsWith(dom));
-
-                if (email === '' || email.length > 100 || !dominioValido) {
-                    document.getElementById('error-admin-email').textContent = 'Correo inválido (máx. 100 caracteres y dominios permitidos).';
+                if (!validarCorreo(email)) {
+                    document.getElementById('error-admin-email').textContent = 'Ingresa un correo con formato nombre@dominio.cl. Se acepta cualquier proveedor con dominio válido.';
                     esValido = false;
                 }
 

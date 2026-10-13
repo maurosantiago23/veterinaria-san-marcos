@@ -55,8 +55,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="txt-email" class="form-label fw-semibold">Correo Electrónico (@duoc.cl, @profesor.duoc.cl, @gmail.com):</label>
-                        <input type="email" id="txt-email" class="form-control" maxlength="100" placeholder="tucorreo@gmail.com" required>
+                        <label for="txt-email" class="form-label fw-semibold">Correo Electrónico (ejemplo: nombre@dominio.cl):</label>
+                        <input type="email" id="txt-email" class="form-control" maxlength="100" placeholder="tucorreo@ejemplo.cl" required>
                         <div id="error-email" class="text-danger small mt-1"></div>
                     </div>
 
@@ -137,13 +137,10 @@
                     esValido = false;
                 }
 
-                // 3. Validar Correo: Máx 100 caracteres y dominios permitidos (@duoc.cl, @profesor.duoc.cl, @gmail.com)
+                // 3. Validar formato general de correo, sin restringir proveedor
                 const email = document.getElementById('txt-email').value.trim();
-                const dominiosPermitidos = ['@duoc.cl', '@profesor.duoc.cl', '@gmail.com'];
-                let dominioValido = dominiosPermitidos.some(dom => email.endsWith(dom));
-
-                if (email === '' || email.length > 100 || !dominioValido) {
-                    document.getElementById('error-email').textContent = 'El correo debe tener máximo 100 caracteres y pertenecer a @duoc.cl, @profesor.duoc.cl o @gmail.com.';
+                if (!validarCorreo(email)) {
+                    document.getElementById('error-email').textContent = 'Ingresa un correo con formato nombre@dominio.cl. Se acepta cualquier proveedor con dominio válido.';
                     esValido = false;
                 }
 
