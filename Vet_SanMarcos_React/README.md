@@ -67,24 +67,28 @@ Los productos y la página de Login son solo una estructura inicial. Todavía no
 
 ## Ejecutar en AWS Academy EC2 (Linux)
 
-Esta guía está pensada para Amazon Linux en AWS Academy. No uses los pasos de Ubuntu de otros apuntes si esa imagen no está disponible en tu laboratorio. El tipo de instancia, por ejemplo `t2.micro`, debe ser uno permitido por el laboratorio.
+Esta guía está pensada para Amazon Linux en AWS Academy, no Ubuntu. Cada integrante puede crear su propia VM. Si eligen compartir una sola instancia, clonen el repositorio una sola vez. El tipo `t2.micro` y los recursos dependen de lo que permita el Learner Lab.
 
 ### 1. Iniciar el laboratorio y lanzar EC2
 
 1. En AWS Academy/Vocareum, pulsa **Start Lab** y espera a que el indicador de AWS quede verde.
 2. Abre la consola de AWS y entra a **EC2 → Instancias → Lanzar instancias**.
-3. Elige una imagen Amazon Linux disponible en el laboratorio, preferentemente Amazon Linux 2023. Usa el tipo permitido por el laboratorio, por ejemplo `t2.micro`.
-4. Crea un par de claves RSA en formato `.pem`, por ejemplo `userReactVite.pem`, y guarda la descarga en Windows. No la subas a GitHub.
-5. Habilita una dirección IPv4 pública y deja el almacenamiento predeterminado si el laboratorio lo permite.
-6. Configura las reglas de entrada según el uso:
+3. Elige Amazon Linux 2023, arquitectura `x86_64`. Si no está disponible, usa Amazon Linux 2. No elijas Ubuntu.
+4. Elige el tipo permitido por el laboratorio, por ejemplo `t2.micro`.
+5. Crea un par de claves RSA en formato `.pem`, por ejemplo `userReactVite.pem`, y guarda la descarga en Windows. No la subas a GitHub.
+6. En red, habilita una dirección IPv4 pública (asignación automática).
+7. En almacenamiento, configura el volumen raíz a **20 GiB, gp3**, si el laboratorio permite ese tamaño y tipo.
+8. Configura las reglas de entrada según cómo vayas a probar:
 
-| Puerto | Origen recomendado | Uso |
-| --- | --- | --- |
-| TCP 22 | Mi IP | Conexión SSH |
-| TCP 5173 | Mi IP, temporalmente | Probar Vite durante desarrollo |
-| TCP 80 | `0.0.0.0/0`, solo si se publica con Nginx | Sitio HTTP |
+| Tipo | Puerto | Origen | Uso |
+| --- | --- | --- | --- |
+| SSH | TCP 22 | My IP | Conexión remota |
+| Custom TCP | TCP 5173 | My IP, temporal | Vite directo desde el navegador |
+| HTTP | TCP 80 | `0.0.0.0/0`, solo si se publica con Nginx | Sitio HTTP |
 
-No abras el puerto 5173 a todo Internet. Anota la IPv4 pública de la instancia cuando aparezca como **En ejecución**.
+Para la regla de Vite, en **Type** elige **Custom TCP**, **Port range** es `5173` y **Source type** es **My IP**. No abras el puerto 5173 a todo Internet. Si usarás el túnel SSH descrito más abajo, no necesitas crear la regla 5173.
+
+Espera a que la instancia aparezca como **En ejecución**. En los detalles copia **Public IPv4 DNS**, que también aparece en **Connect → SSH client**. Si AWS no muestra un DNS público, usa **Public IPv4** como alternativa.
 
 ### 2. Preparar la clave PEM en Windows
 
@@ -97,13 +101,13 @@ icacls "userReactVite.pem" /grant:r "$($env:USERNAME):(R)"
 icacls "userReactVite.pem" /inheritance:r
 ```
 
-Conéctate con el usuario predeterminado de Amazon Linux:
+Conéctate con el usuario predeterminado de Amazon Linux usando el **Public IPv4 DNS** copiado de EC2:
 
 ```powershell
-ssh -i ".\userReactVite.pem" ec2-user@IP_PUBLICA_EC2
+ssh -i ".\userReactVite.pem" ec2-user@PUBLIC_IPV4_DNS
 ```
 
-Reemplaza `IP_PUBLICA_EC2` por la dirección pública que muestre la instancia. En el grupo de seguridad limita SSH (22) a tu IP.
+Reemplaza `PUBLIC_IPV4_DNS` por el nombre DNS real (por ejemplo, `ec2-xx-xx-xx-xx.region.compute.amazonaws.com`). También puedes usar la IPv4 pública en su lugar. La primera conexión puede pedir confirmar la huella del host; escribe `yes`. En el grupo de seguridad limita SSH (22) a **My IP**.
 
 ### 3. Instalar herramientas y Node.js en Amazon Linux
 
@@ -138,9 +142,9 @@ node --version
 npm --version
 ```
 
-### 4. Clonar y ejecutar el starter
+### 4. Clonar o actualizar el starter
 
-En la instancia, en el primer uso clona el repo; si ya lo clonaste antes, actualízalo con `git pull`:
+En el primer uso, clona el repositorio en la instancia:
 
 ```bash
 mkdir -p ~/Downloads
@@ -148,26 +152,50 @@ cd ~/Downloads
 git clone https://github.com/maurosantiago23/veterinaria-san-marcos.git
 cd ~/Downloads/veterinaria-san-marcos/Vet_SanMarcos_React
 npm install
-npm run dev -- --host 0.0.0.0
 ```
 
-Para actualizar un clon existente antes de ejecutar Vite:
+Si ya tienes el repositorio clonado, actualízalo e instala dependencias:
 
 ```bash
 cd ~/Downloads/veterinaria-san-marcos
 git pull origin main
 cd Vet_SanMarcos_React
 npm install
+```
+
+#### Opción A: abrir Vite directamente
+
+En la VM, inicia el servidor accesible por la red:
+
+```bash
 npm run dev -- --host 0.0.0.0
 ```
 
-Para probar Vite desde el navegador, agrega temporalmente una regla TCP 5173 al grupo de seguridad, limitada a la IP pública actual de tu computador. No abras este puerto a todo Internet. Luego abre:
+Agrega temporalmente la regla **Custom TCP / TCP 5173 / My IP** al grupo de seguridad. No abras este puerto a todo Internet. Luego abre en tu computador:
 
 ```text
-http://IP_PUBLICA_EC2:5173
+http://PUBLIC_IPV4_DNS:5173
 ```
 
-Deja la terminal de Vite abierta mientras trabajas. Para detener el servidor, presiona `Ctrl + C`. El laboratorio puede detener la instancia y cambiar su IP pública al reiniciarla.
+Reemplaza `PUBLIC_IPV4_DNS` por el DNS público copiado de EC2; también puedes usar la IPv4 pública. Deja la terminal de Vite abierta mientras trabajas. Para detener el servidor, presiona `Ctrl + C`.
+
+#### Opción B: túnel SSH sin abrir el puerto 5173
+
+En la terminal de la VM, inicia Vite solo en localhost:
+
+```bash
+npm run dev
+```
+
+En una **segunda** terminal de PowerShell en tu computador, desde la carpeta de la PEM, crea el túnel SSH:
+
+```powershell
+ssh -i ".\userReactVite.pem" -N -L 5173:127.0.0.1:5173 ec2-user@PUBLIC_IPV4_DNS
+```
+
+Deja abiertas ambas terminales y visita `http://localhost:5173` en tu computador. Con este método solo necesitas la regla SSH TCP 22 desde **My IP**; no agregues la regla 5173. Para detener el túnel, presiona `Ctrl + C` en su terminal.
+
+Al reiniciar la instancia, comprueba de nuevo su Public IPv4 DNS e IPv4: pueden cambiar si no se usa una Elastic IP. El Learner Lab también puede detener recursos al terminar la sesión.
 
 ### 5. Publicar una compilación con Nginx (opcional)
 
@@ -182,15 +210,17 @@ sudo nginx -t
 sudo systemctl enable --now nginx
 ```
 
-Si usas Amazon Linux 2, instala Nginx con `sudo yum install -y nginx`. En `/etc/nginx/conf.d/default.conf`, edita el `location /` existente para que incluya:
+Si usas Amazon Linux 2, instala Nginx con `sudo yum install -y nginx`. En el bloque `server` activo de `/etc/nginx/nginx.conf` o de un archivo incluido desde `/etc/nginx/conf.d/`, configura la raíz y el fallback de React Router:
 
 ```nginx
 location / {
+	root /usr/share/nginx/html;
+	index index.html;
 	try_files $uri $uri/ /index.html;
 }
 ```
 
-Después ejecuta `sudo nginx -t` y `sudo systemctl reload nginx`. Permite HTTP (puerto 80) en el grupo de seguridad y abre `http://IP_PUBLICA_EC2`. Ejecutar Vite no requiere modificar `package.json` ni desactivar controles de host.
+Después ejecuta `sudo nginx -t` y `sudo systemctl reload nginx`. Permite HTTP (puerto 80) en el grupo de seguridad y abre `http://PUBLIC_IPV4_DNS` o la IPv4 pública. Ejecutar Vite no requiere modificar `package.json` ni desactivar controles de host.
 
 ## Pruebas unitarias (cuando lleguemos a esa parte de la unidad)
 
