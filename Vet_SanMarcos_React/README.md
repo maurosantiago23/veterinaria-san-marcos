@@ -1,243 +1,189 @@
-# Veterinaria San Marcos React
+# 🐾 Veterinaria San Marcos — Unidad 2 (React + Vite)
 
-Punto de partida de la Unidad 2. Esta aplicación se mantiene separada de `Vet_SanMarcos`, que contiene la versión HTML, CSS y JavaScript presentada en la Unidad 1.
+Guía completa de trabajo para **Mauro Santiago** y **Gabriel González** correspondiente a la Unidad 2 de **DSY1104 - Desarrollo Fullstack II**.
 
-## Flujo recomendado: desarrollo local
+---
 
-Este es el flujo de trabajo de clase: VS Code y Vite trabajan sobre la misma carpeta del computador. Al guardar un archivo dentro de `src/`, Vite actualiza el navegador mediante HMR (recarga en caliente). No necesitas AWS para programar y revisar cada cambio.
+## 💡 El Concepto Clave: ¿Cómo trabajamos?
 
-Requisitos: Git, Node.js y npm instalados en el computador. Comprueba Node y npm desde PowerShell:
+Para no confundirse ni perder tiempo, ten presente esta regla fundamental:
 
+* 💻 **Tu Computador (Local):** Es donde programas todos los días en VS Code. Al guardar cambios (`Ctrl + S`), los ves **en tiempo real** en tu navegador sin demoras. **No necesitas tocar AWS ni internet para programar.**
+* ☁️ **AWS Academy EC2 (Nube):** Es solo una máquina virtual remota para **demostrar la app al profesor si él lo pide expresamente**. Solo descarga el código ya terminado desde GitHub.
+
+---
+
+## 🛠️ Paso 0: Requisito Único en tu PC (Windows)
+
+Para poder programar en tu computador y ver cambios en tiempo real, **debes tener Node.js instalado en Windows** (no solo dentro de la máquina virtual de AWS).
+
+### ¿Cómo verificar si lo tienes?
+Abre PowerShell y ejecuta:
 ```powershell
 node --version
 npm --version
 ```
 
-Desde la raíz del repositorio, instala las dependencias una vez y arranca Vite:
+### Si no lo tienes instalado:
+Tienes dos opciones fáciles para instalarlo:
+* **Opción A (Recomendada):** Descarga el instalador **LTS** desde [nodejs.org](https://nodejs.org/) y sigue el asistente ("Siguiente, Siguiente, Finalizar").
+* **Opción B (Por comando):**
+  ```powershell
+  winget install OpenJS.NodeJS.LTS --accept-package-agreements --accept-source-agreements
+  ```
+*(Tras instalarlo, cierra y vuelve a abrir tu terminal o VS Code).*
 
+---
+
+## 🚀 Flujo Diario: Desarrollo Local en Tiempo Real
+
+Este es el flujo normal para trabajar en clases o en casa:
+
+### 1. Iniciar el proyecto
+Abre una terminal en la carpeta del proyecto React:
 ```powershell
 cd Vet_SanMarcos_React
-npm install
+npm install          # Solo la primera vez o si se agregaron paquetes nuevos
 npm run dev
 ```
 
-Abre en el mismo computador la dirección que indique Vite, normalmente `http://localhost:5173/`. Mantén abierta la terminal. Al guardar cambios en `src/`, Vite los refleja en el navegador. Detén el servidor con `Ctrl + C`.
+### 2. Abrir en el navegador
+Vite te mostrará en pantalla la dirección local:
+👉 **`http://localhost:5173/`**
 
-### Compartir cambios con Gabriel
+### 3. Programar con recarga automática (HMR)
+* Deja la terminal abierta ejecutando `npm run dev`.
+* Abre y edita cualquier archivo dentro de `src/` en VS Code.
+* Al presionar **`Ctrl + S`**, Vite actualizará el navegador automáticamente al instante sin tener que recargar la página.
+* Para detener el servidor, pulsa `Ctrl + C` en la terminal.
 
-Cada integrante clona el repositorio en su computador una vez y ejecuta `npm install` en su propia carpeta `Vet_SanMarcos_React`. Los archivos no se sincronizan automáticamente entre equipos: quien termina un avance hace commit y push; la otra persona ejecuta `git pull origin main` desde la raíz del repositorio. Si cambió `package.json` o `package-lock.json`, vuelve a ejecutar `npm install`.
+### Comandos disponibles en `Vet_SanMarcos_React`:
+* `npm run dev`: Inicia el servidor de desarrollo local con recarga en caliente.
+* `npm run build`: Genera los archivos optimizados para producción en la carpeta `dist/`.
+* `npm run lint`: Analiza el código en busca de errores de sintaxis y buenas prácticas.
+* `npm run preview`: Previsualiza localmente el build de producción.
 
-HMR solo observa la carpeta desde la que se ejecuta Vite. Guardar un archivo en Windows no modifica por sí solo la copia separada que está dentro de EC2.
+---
 
-## Comandos disponibles
+## 🤝 Colaboración entre Mauro y Gabriel (Git y GitHub)
 
+Para mantener el código sincronizado entre ambos sin sobreescribir el trabajo del otro:
+
+### Cuando termines un avance en tu PC:
 ```powershell
-npm run dev
-npm run build
-npm run lint
-npm run preview
+git status                    # Verifica qué archivos modificaste
+git add .                     # Prepara los cambios
+git commit -m "Mensaje descriptivo del avance"
+git push origin main          # Sube los cambios a GitHub
 ```
 
-- `dev`: inicia el servidor de desarrollo con recarga automática.
-- `build`: genera la versión de producción en `dist/`.
-- `lint`: revisa el código con Oxlint.
-- `preview`: sirve localmente la última compilación.
+### Antes de empezar a programar (para recibir los avances de tu compañero):
+```powershell
+git pull origin main          # Descarga los últimos cambios del repositorio
+npm install                   # Solo si tu compañero agregó nuevas dependencias
+```
 
-## Estructura inicial
+> ⚠️ **Importante de seguridad:** Las claves privadas `.pem` y archivos temporales están protegidos en `.gitignore`. **Nunca subas claves privadas a GitHub**.
+
+---
+
+## 🏛️ Estructura del Proyecto React
 
 ```text
 Vet_SanMarcos_React/
-├── public/images/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── App.jsx
-│   ├── index.css
-│   └── main.jsx
-├── index.html
-├── package.json
-└── vite.config.js
+├── public/                   # Archivos estáticos directos (imágenes, favicons)
+│   └── images/
+├── src/                      # Código fuente de la aplicación
+│   ├── components/           # Componentes reutilizables (Navbar, Producto, etc.)
+│   ├── pages/                # Vistas de la aplicación (Inicio, Productos, Login, etc.)
+│   ├── App.jsx               # Enrutador principal (React Router)
+│   ├── index.css             # Estilos globales y paleta de colores
+│   └── main.jsx              # Punto de entrada de React
+├── index.html                # Plantilla HTML base
+├── package.json              # Dependencias y scripts
+└── vite.config.js            # Configuración de Vite
 ```
 
-## Qué incluye esta base
+---
 
-- Rutas para Inicio, Productos y Login con React Router.
-- Un Navbar compartido que usa enlaces de React Router.
-- Un componente `Producto` reutilizado para mostrar ejemplos estáticos.
-- Bootstrap 5 disponible mediante sus clases CSS; React-Bootstrap está instalado para seguir las prácticas de la unidad cuando se introduzca en clases.
+## ☁️ Despliegue en AWS Academy EC2 (Evaluación en la Nube)
 
-Los productos y la página de Login son solo una estructura inicial. Todavía no implementan carrito, autenticación ni backend.
+> 🛑 **Usa este apartado únicamente cuando el profesor solicite evaluar o mostrar la aplicación en una instancia EC2.**
 
-## AWS Academy EC2 (opcional)
+La instancia EC2 es una computadora independiente en la nube. **No se sincroniza sola con tu PC.** El flujo es: programas en tu PC → subes a GitHub (`git push`) → te conectas a EC2 → descargas los cambios (`git pull`).
 
-Usa esta opción para practicar o mostrar la aplicación desde una VM; no es necesaria para el desarrollo diario. La carpeta clonada en EC2 es independiente de la de Windows. Después de hacer push desde el computador, ejecuta `git pull origin main` en la VM para traer esos cambios. Esta guía está pensada para Amazon Linux en AWS Academy, no Ubuntu. El tipo `t2.micro` y los recursos dependen de lo que permita el Learner Lab.
+### 1. Lanzar la Instancia en AWS Academy
+1. Entra a AWS Vocareum y presiona **Start Lab** (espera el indicador verde).
+2. Ve a **EC2 → Instancias → Lanzar instancias**.
+3. **Nombre:** `VetSanMarcos-React`
+4. **AMI:** Amazon Linux 2023 (`x86_64`). *(No uses Ubuntu ni Amazon Linux 2 a menos que sea necesario)*.
+5. **Tipo de instancia:** `t2.micro` (permitido en el lab).
+6. **Par de claves:** Crea o selecciona un par `.pem` (por ejemplo `userReactVite.pem`) y guárdalo en tu carpeta de Descargas en Windows.
+7. **Red / Grupo de seguridad:**
+   * **SSH (Puerto 22):** Origen `My IP`.
+   * **Custom TCP (Puerto 5173):** Origen `My IP` *(para ver Vite en vivo)*.
+   * **HTTP (Puerto 80):** Origen `Cualquier lugar (0.0.0.0/0)` *(solo si se monta con Nginx)*.
+8. Lanza la instancia y copia el **Public IPv4 DNS** (o la **IPv4 Pública**).
 
-### 1. Iniciar el laboratorio y lanzar EC2
-
-1. En AWS Academy/Vocareum, pulsa **Start Lab** y espera a que el indicador de AWS quede verde.
-2. Abre la consola de AWS y entra a **EC2 → Instancias → Lanzar instancias**.
-3. Elige Amazon Linux 2023, arquitectura `x86_64`. Si no está disponible, usa Amazon Linux 2. No elijas Ubuntu.
-4. Elige el tipo permitido por el laboratorio, por ejemplo `t2.micro`.
-5. Crea un par de claves RSA en formato `.pem`, por ejemplo `userReactVite.pem`, y guarda la descarga en Windows. No la subas a GitHub.
-6. En red, habilita una dirección IPv4 pública (asignación automática).
-7. En almacenamiento, configura el volumen raíz a **20 GiB, gp3**, si el laboratorio permite ese tamaño y tipo.
-8. Configura las reglas de entrada según cómo vayas a probar:
-
-| Tipo | Puerto | Origen | Uso |
-| --- | --- | --- | --- |
-| SSH | TCP 22 | My IP | Conexión remota |
-| Custom TCP | TCP 5173 | My IP, temporal | Vite directo desde el navegador |
-| HTTP | TCP 80 | `0.0.0.0/0`, solo si se publica con Nginx | Sitio HTTP |
-
-Para la regla de Vite, en **Type** elige **Custom TCP**, **Port range** es `5173` y **Source type** es **My IP**. No abras el puerto 5173 a todo Internet. Si usarás el túnel SSH descrito más abajo, no necesitas crear la regla 5173.
-
-Espera a que la instancia aparezca como **En ejecución**. En los detalles copia **Public IPv4 DNS**, que también aparece en **Connect → SSH client**. Si AWS no muestra un DNS público, usa **Public IPv4** como alternativa.
-
-### 2. Preparar la clave PEM en Windows
-
-En PowerShell, abre la carpeta donde descargaste `userReactVite.pem` y aplica los permisos indicados por el profesor:
-
+### 2. Conectarse por SSH desde Windows (PowerShell)
+En tu PC, abre la carpeta donde descargaste la clave `.pem`:
 ```powershell
 cd "$HOME\Downloads"
+# Ajustar permisos de la clave (solo la primera vez en Windows):
 icacls "userReactVite.pem" /reset
 icacls "userReactVite.pem" /grant:r "$($env:USERNAME):(R)"
 icacls "userReactVite.pem" /inheritance:r
-```
 
-Conéctate con el usuario predeterminado de Amazon Linux usando el **Public IPv4 DNS** copiado de EC2:
-
-```powershell
+# Conectarse a la instancia:
 ssh -i ".\userReactVite.pem" ec2-user@PUBLIC_IPV4_DNS
 ```
 
-Reemplaza `PUBLIC_IPV4_DNS` por el nombre DNS real (por ejemplo, `ec2-xx-xx-xx-xx.region.compute.amazonaws.com`). También puedes usar la IPv4 pública en su lugar. La primera conexión puede pedir confirmar la huella del host; escribe `yes`. En el grupo de seguridad limita SSH (22) a **My IP**.
-
-### 3. Instalar herramientas y Node.js en Amazon Linux
-
-Una vez conectado por SSH, comprueba la distribución:
-
-```bash
-cat /etc/os-release
-```
-
-Para Amazon Linux 2023:
-
+### 3. Instalar Node.js en la instancia EC2 (solo la primera vez)
+Una vez dentro de la terminal de Amazon Linux:
 ```bash
 sudo dnf update -y
 sudo dnf install -y git curl --allowerasing
-```
 
-Amazon Linux 2023 puede traer `curl-minimal` preinstalado, que entra en conflicto con el paquete `curl` completo. `--allowerasing` permite a DNF reemplazar ese paquete mínimo al instalar Git y curl, como en la salida de ejemplo del laboratorio.
-
-Si el laboratorio ofrece Amazon Linux 2, usa `yum` en lugar de `dnf`:
-
-```bash
-sudo yum update -y
-sudo yum install -y git curl
-```
-
-Instala Node.js 22 sin cambiar el Node del sistema:
-
-```bash
+# Instalar Node 22 mediante NVM:
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 source ~/.bashrc
 nvm install 22
 nvm use 22
-node --version
-npm --version
 ```
 
-### 4. Clonar o actualizar el starter
+### 4. Clonar o actualizar el repositorio en EC2
+* **Primera vez (Clonar):**
+  ```bash
+  mkdir -p ~/Downloads
+  cd ~/Downloads
+  git clone https://github.com/maurosantiago23/veterinaria-san-marcos.git
+  cd veterinaria-san-marcos/Vet_SanMarcos_React
+  npm install
+  ```
+* **Actualizaciones posteriores (cuando hagas cambios desde tu PC):**
+  ```bash
+  cd ~/Downloads/veterinaria-san-marcos
+  git pull origin main
+  cd Vet_SanMarcos_React
+  npm install
+  ```
 
-En el primer uso, clona el repositorio en la instancia:
-
-```bash
-mkdir -p ~/Downloads
-cd ~/Downloads
-git clone https://github.com/maurosantiago23/veterinaria-san-marcos.git
-cd ~/Downloads/veterinaria-san-marcos/Vet_SanMarcos_React
-npm install
-```
-
-Si ya tienes el repositorio clonado, actualízalo e instala dependencias:
-
-```bash
-cd ~/Downloads/veterinaria-san-marcos
-git pull origin main
-cd Vet_SanMarcos_React
-npm install
-```
-
-#### Opción A: abrir Vite directamente
-
-En la VM, inicia el servidor accesible por la red:
-
+### 5. Mostrar la app en vivo en AWS
+Para que Vite escuche peticiones externas a través de la IP de la VM, ejecútalo así:
 ```bash
 npm run dev -- --host 0.0.0.0
 ```
+Luego abre en el navegador de tu computador:
+👉 `http://PUBLIC_IPV4_DNS:5173`
 
-Agrega temporalmente la regla **Custom TCP / TCP 5173 / My IP** al grupo de seguridad. No abras este puerto a todo Internet. Luego abre en tu computador:
+*(Para detener el servidor en la VM, presiona `Ctrl + C`).*
 
-```text
-http://PUBLIC_IPV4_DNS:5173
-```
+---
 
-Reemplaza `PUBLIC_IPV4_DNS` por el DNS público copiado de EC2; también puedes usar la IPv4 pública. Deja la terminal de Vite abierta mientras trabajas. Para detener el servidor, presiona `Ctrl + C`.
+## 🧪 Pruebas Unitarias (Próximas clases)
 
-#### Opción B: túnel SSH sin abrir el puerto 5173
-
-En la terminal de la VM, inicia Vite solo en localhost:
-
+Cuando la asignatura aborde pruebas unitarias con Vitest y React Testing Library, las herramientas a incorporar serán:
 ```bash
-npm run dev
+npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom
 ```
-
-En una **segunda** terminal de PowerShell en tu computador, desde la carpeta de la PEM, crea el túnel SSH:
-
-```powershell
-ssh -i ".\userReactVite.pem" -N -L 5173:127.0.0.1:5173 ec2-user@PUBLIC_IPV4_DNS
-```
-
-Deja abiertas ambas terminales y visita `http://localhost:5173` en tu computador. Con este método solo necesitas la regla SSH TCP 22 desde **My IP**; no agregues la regla 5173. Para detener el túnel, presiona `Ctrl + C` en su terminal.
-
-Al reiniciar la instancia, comprueba de nuevo su Public IPv4 DNS e IPv4: pueden cambiar si no se usa una Elastic IP. El Learner Lab también puede detener recursos al terminar la sesión.
-
-### 5. Publicar una compilación con Nginx (opcional)
-
-Para servir la compilación por HTTP en vez del servidor de desarrollo:
-
-```bash
-npm run build
-sudo dnf install -y nginx
-sudo mkdir -p /usr/share/nginx/html
-sudo cp -r dist/. /usr/share/nginx/html/
-sudo nginx -t
-sudo systemctl enable --now nginx
-```
-
-Si usas Amazon Linux 2, instala Nginx con `sudo yum install -y nginx`. En el bloque `server` activo de `/etc/nginx/nginx.conf` o de un archivo incluido desde `/etc/nginx/conf.d/`, configura la raíz y el fallback de React Router:
-
-```nginx
-location / {
-	root /usr/share/nginx/html;
-	index index.html;
-	try_files $uri $uri/ /index.html;
-}
-```
-
-Después ejecuta `sudo nginx -t` y `sudo systemctl reload nginx`. Permite HTTP (puerto 80) en el grupo de seguridad y abre `http://PUBLIC_IPV4_DNS` o la IPv4 pública. Ejecutar Vite no requiere modificar `package.json` ni desactivar controles de host.
-
-## Pruebas unitarias (cuando lleguemos a esa parte de la unidad)
-
-El starter todavía no incluye pruebas ni el comando `npm test`. Según la guía del curso, cuando corresponda se instalan estas herramientas:
-
-```bash
-npm install -D vitest
-npm install -D @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom
-```
-
-Después habrá que configurar Vitest en `vite.config.js`, importar `@testing-library/jest-dom` desde `src/setupTests.js` y agregar el script `"test": "vitest"` a `package.json`. Solo entonces se podrá ejecutar `npm test`.
-
-## Material del curso
-
-Los PDF, TXT y claves PEM locales no forman parte del código del proyecto. La carpeta `pdf y comandos` y los archivos `*.pem` están excluidos por `.gitignore`; no subas claves privadas a GitHub.
+Y se configurará el script `"test": "vitest"` en `package.json`.
