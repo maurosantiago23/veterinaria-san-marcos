@@ -102,7 +102,9 @@ npm install
 npm run dev
 ```
 
-Vite mostrará la dirección local para abrir en el navegador, normalmente `http://localhost:5173/`. Los demás comandos y la estructura de esta etapa están documentados en `Vet_SanMarcos_React/README.md`.
+Vite mostrará la dirección local para abrir en el navegador, normalmente `http://localhost:5173/`. Guarda los cambios en la carpeta local `Vet_SanMarcos_React` y Vite los reflejará en el navegador mediante HMR. Esta es la forma recomendada para desarrollar, igual que en clase.
+
+La VM EC2 es opcional y contiene otra copia del repositorio; no recibe automáticamente los cambios locales. Para probar allí una versión actualizada, primero haz commit y push y luego ejecuta `git pull origin main` dentro de la VM. Los comandos AWS están en `Vet_SanMarcos_React/README.md`.
 
 Para generar una compilación de producción, ejecuta `npm run build` dentro de `Vet_SanMarcos_React`.
 
