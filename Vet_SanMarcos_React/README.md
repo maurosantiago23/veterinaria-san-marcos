@@ -2,21 +2,18 @@
 
 Punto de partida de la Unidad 2. Esta aplicación se mantiene separada de `Vet_SanMarcos`, que contiene la versión HTML, CSS y JavaScript presentada en la Unidad 1.
 
-## Requisitos
+## Flujo recomendado: desarrollo local
 
-- Node.js instalado.
-- npm, incluido con Node.js.
+Este es el flujo de trabajo de clase: VS Code y Vite trabajan sobre la misma carpeta del computador. Al guardar un archivo dentro de `src/`, Vite actualiza el navegador mediante HMR (recarga en caliente). No necesitas AWS para programar y revisar cada cambio.
 
-Comprueba la instalación desde una terminal:
+Requisitos: Git, Node.js y npm instalados en el computador. Comprueba Node y npm desde PowerShell:
 
 ```powershell
 node --version
 npm --version
 ```
 
-## Instalar y ejecutar
-
-Desde la carpeta raíz del repositorio:
+Desde la raíz del repositorio, instala las dependencias una vez y arranca Vite:
 
 ```powershell
 cd Vet_SanMarcos_React
@@ -24,7 +21,13 @@ npm install
 npm run dev
 ```
 
-Abre en el navegador la dirección que indique Vite, normalmente `http://localhost:5173/`.
+Abre en el mismo computador la dirección que indique Vite, normalmente `http://localhost:5173/`. Mantén abierta la terminal. Al guardar cambios en `src/`, Vite los refleja en el navegador. Detén el servidor con `Ctrl + C`.
+
+### Compartir cambios con Gabriel
+
+Cada integrante clona el repositorio en su computador una vez y ejecuta `npm install` en su propia carpeta `Vet_SanMarcos_React`. Los archivos no se sincronizan automáticamente entre equipos: quien termina un avance hace commit y push; la otra persona ejecuta `git pull origin main` desde la raíz del repositorio. Si cambió `package.json` o `package-lock.json`, vuelve a ejecutar `npm install`.
+
+HMR solo observa la carpeta desde la que se ejecuta Vite. Guardar un archivo en Windows no modifica por sí solo la copia separada que está dentro de EC2.
 
 ## Comandos disponibles
 
@@ -65,9 +68,9 @@ Vet_SanMarcos_React/
 
 Los productos y la página de Login son solo una estructura inicial. Todavía no implementan carrito, autenticación ni backend.
 
-## Ejecutar en AWS Academy EC2 (Linux)
+## AWS Academy EC2 (opcional)
 
-Esta guía está pensada para Amazon Linux en AWS Academy, no Ubuntu. Cada integrante puede crear su propia VM. Si eligen compartir una sola instancia, clonen el repositorio una sola vez. El tipo `t2.micro` y los recursos dependen de lo que permita el Learner Lab.
+Usa esta opción para practicar o mostrar la aplicación desde una VM; no es necesaria para el desarrollo diario. La carpeta clonada en EC2 es independiente de la de Windows. Después de hacer push desde el computador, ejecuta `git pull origin main` en la VM para traer esos cambios. Esta guía está pensada para Amazon Linux en AWS Academy, no Ubuntu. El tipo `t2.micro` y los recursos dependen de lo que permita el Learner Lab.
 
 ### 1. Iniciar el laboratorio y lanzar EC2
 
