@@ -121,8 +121,10 @@ Para Amazon Linux 2023:
 
 ```bash
 sudo dnf update -y
-sudo dnf install -y git curl
+sudo dnf install -y git curl --allowerasing
 ```
+
+Amazon Linux 2023 puede traer `curl-minimal` preinstalado, que entra en conflicto con el paquete `curl` completo. `--allowerasing` permite a DNF reemplazar ese paquete mínimo al instalar Git y curl, como en la salida de ejemplo del laboratorio.
 
 Si el laboratorio ofrece Amazon Linux 2, usa `yum` en lugar de `dnf`:
 
