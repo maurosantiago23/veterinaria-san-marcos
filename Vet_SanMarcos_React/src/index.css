@@ -173,24 +173,70 @@ p, span, label, input, select, textarea, li {
 }
 
 /* =================================================
-   BOTONES Y ESTILOS DE COMPONENTES
+   BOTONES: EFECTO DE ILUMINACIÓN Y ONDA (WAVY SHINE & GLOW)
    ================================================= */
+.btn {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.25s ease,
+              background-color 0.25s ease,
+              border-color 0.25s ease !important;
+}
+
+/* Destello ondulado / Wavy light sheen que barre el botón al pasar el mouse */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -140%;
+  width: 50%;
+  height: 220%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0.2) 80%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: left 0.6s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.25s ease;
+}
+
+.btn:hover::after {
+  left: 160%;
+  opacity: 1;
+}
+
+/* Botón Primario con resplandor cyan/azul */
 .btn-primary {
   --bs-btn-color: #ffffff;
   --bs-btn-bg: var(--azul-principal);
   --bs-btn-border-color: var(--azul-principal);
   --bs-btn-hover-color: #ffffff;
-  --bs-btn-hover-bg: #124657;
-  --bs-btn-hover-border-color: #124657;
+  --bs-btn-hover-bg: #14495a;
+  --bs-btn-hover-border-color: #14495a;
   --bs-btn-active-color: #ffffff;
   --bs-btn-active-bg: #103d4b;
   --bs-btn-active-border-color: #103d4b;
-  font-weight: 600;
   padding: 8px 18px;
   border-radius: 6px;
-  transition: all 0.2s ease;
 }
 
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(24, 86, 106, 0.42),
+              0 0 14px rgba(66, 172, 199, 0.45);
+}
+
+/* Botón Secundario con resplandor pizarra */
 .btn-secondary {
   --bs-btn-color: #ffffff;
   --bs-btn-bg: #53666e;
@@ -198,18 +244,36 @@ p, span, label, input, select, textarea, li {
   --bs-btn-hover-color: #ffffff;
   --bs-btn-hover-bg: #3f535b;
   --bs-btn-hover-border-color: #3f535b;
-  font-weight: 600;
   padding: 8px 18px;
   border-radius: 6px;
 }
 
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(83, 102, 110, 0.38),
+              0 0 12px rgba(135, 155, 164, 0.35);
+}
+
+/* Botón Outline */
 .btn-outline-primary {
   --bs-btn-color: var(--azul-principal);
   --bs-btn-border-color: var(--azul-principal);
   --bs-btn-hover-color: #ffffff;
   --bs-btn-hover-bg: var(--azul-principal);
   --bs-btn-hover-border-color: var(--azul-principal);
+  border-radius: 6px;
 }
+
+.btn-outline-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(24, 86, 106, 0.32);
+}
+
+/* Feedback táctil al hacer click */
+.btn:active {
+  transform: translateY(0) scale(0.98) !important;
+}
+
 
 /* =================================================
    SECCIONES DE LA PÁGINA (HERO, SECCIONES, CARDS)
