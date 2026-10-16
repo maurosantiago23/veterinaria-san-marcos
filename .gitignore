@@ -6,3 +6,7 @@ dist/
 /Vet_SanMarcos_React/node_modules/
 /Vet_SanMarcos_React/dist/
 /Vet_SanMarcos_React/pdf y comandos/
+# Documentos de estudio y guion de presentacion para Mauro y Gabriel
+GUIA_DEFENSA_EXAMEN.txt
+FLUJO_PRESENTACION_PROFESOR.txt
+*.estudio.txt

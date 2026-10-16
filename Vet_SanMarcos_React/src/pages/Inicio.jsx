@@ -1,34 +1,12 @@
 import { Link } from 'react-router-dom'
 import Producto from '../components/Producto.jsx'
-
-const productosDestacados = [
-  {
-    id: 'SRV-001',
-    nombre: 'Consulta Veterinaria General',
-    precio: '25.000',
-    descripcion: 'Evaluación clínica integral y revisión de constantes vitales.',
-    imagen: '/images/Veterinario1.jpg',
-    alt: 'Consulta Veterinaria General',
-  },
-  {
-    id: 'FAR-103',
-    nombre: 'Simparica 10-20 kg',
-    precio: '21.000',
-    descripcion: 'Comprimido masticable para control eficaz de pulgas y garrapatas.',
-    imagen: '/images/antiparasitario.jpg',
-    alt: 'Simparica Antiparasitario',
-  },
-  {
-    id: 'PRO-201',
-    nombre: 'Alimento Perro Adulto Salmón 3 kg',
-    precio: '19.990',
-    descripcion: 'Alimento súper premium formulado para razas medianas.',
-    imagen: '/images/comida_perro.jpg',
-    alt: 'Alimento Perro Adulto Salmón',
-  },
-]
+import { catalogoProductos } from '../data/productos'
+import { useCart } from '../context/CartContext'
 
 function Inicio() {
+  const { agregarProducto } = useCart()
+  const productosDestacados = catalogoProductos.slice(0, 3)
+
   return (
     <>
       {/* Banner de bienvenida (Hero) */}
@@ -40,9 +18,14 @@ function Inicio() {
             profesional y un completo pet shop con alimentos y medicamentos para
             asegurar la salud y felicidad de tus mejores amigos.
           </p>
-          <Link className="btn btn-primary" to="/productos">
-            Ver Catálogo de Productos
-          </Link>
+          <div className="d-flex flex-wrap gap-2">
+            <Link className="btn btn-primary" to="/productos">
+              Ver Catálogo de Productos
+            </Link>
+            <Link className="btn btn-outline-primary" to="/contacto">
+              Agendar Atención Médica
+            </Link>
+          </div>
         </div>
         <div className="hero-image">
           <img
@@ -72,6 +55,8 @@ function Inicio() {
                 descripcion={prod.descripcion}
                 imagen={prod.imagen}
                 alt={prod.alt}
+                stockInicial={prod.stockInicial}
+                onAgregarCarrito={(p) => agregarProducto(p, 1)}
               />
             </div>
           ))}
@@ -88,7 +73,7 @@ function Inicio() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Colegio Médico Veterinario de Chile
+              Colegio Médico Veterinario de Chile (COLMEVET)
             </a>
           </li>
           <li>

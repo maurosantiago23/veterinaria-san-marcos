@@ -1,70 +1,46 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Producto from '../components/Producto.jsx'
-
-const catalogoProductos = [
-  {
-    id: 'SRV-001',
-    categoria: 'servicios',
-    nombre: 'Consulta Veterinaria General',
-    precio: '25.000',
-    descripcion: 'Evaluación clínica integral y revisión de constantes vitales.',
-    imagen: '/images/Veterinario1.jpg',
-    alt: 'Consulta Veterinaria General',
-  },
-  {
-    id: 'FAR-103',
-    categoria: 'farmacia',
-    nombre: 'Simparica 10-20 kg',
-    precio: '21.000',
-    descripcion: 'Comprimido masticable para control eficaz de pulgas y garrapatas.',
-    imagen: '/images/antiparasitario.jpg',
-    alt: 'Simparica Antiparasitario',
-  },
-  {
-    id: 'PRO-201',
-    categoria: 'alimentos',
-    nombre: 'Alimento Perro Adulto Salmón 3 kg',
-    precio: '19.990',
-    descripcion: 'Alimento súper premium formulado para razas medianas.',
-    imagen: '/images/comida_perro.jpg',
-    alt: 'Alimento Perro Adulto Salmón',
-  },
-  {
-    id: 'FAR-104',
-    categoria: 'farmacia',
-    nombre: 'NexGard Spectra Perros Medianos',
-    precio: '23.500',
-    descripcion: 'Protección mensual contra parásitos externos e internos.',
-    imagen: '/images/antiparasitario.jpg',
-    alt: 'NexGard Spectra',
-  },
-  {
-    id: 'PRO-202',
-    categoria: 'alimentos',
-    nombre: 'Snack Dental Felino 60g',
-    precio: '4.990',
-    descripcion: 'Premios crujientes diseñados para reducir el sarro dental.',
-    imagen: '/images/comida_gato.png',
-    alt: 'Snack Dental Gatos',
-  },
-  {
-    id: 'SRV-002',
-    categoria: 'servicios',
-    nombre: 'Peluquería y Baño Sanitario',
-    precio: '18.000',
-    descripcion: 'Incluye corte de pelo según raza, baño hipoalergénico y corte de uñas.',
-    imagen: '/images/champu.jpg',
-    alt: 'Peluquería Canina',
-  },
-]
+import { catalogoProductos } from '../data/productos'
+import { useCart } from '../context/CartContext'
 
 function Productos() {
-  const [categoriaActual, setCategoriaActual] = useState('todos')
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { agregarProducto } = useCart()
+
+  // Soporte para parámetros de búsqueda con useLocation (Paso 8 Guía II)
+  const parametros = new URLSearchParams(location.search)
+  const categoriaURL = parametros.get('categoria') || 'todos'
+
+  const [categoriaActual, setCategoriaActual] = useState(categoriaURL)
+  const [alertaCarrito, setAlertaCarrito] = useState('')
+
+  useEffect(() => {
+    if (categoriaURL) {
+      setCategoriaActual(categoriaURL)
+    }
+  }, [categoriaURL])
+
+  const cambiarCategoria = (cat) => {
+    setCategoriaActual(cat)
+    if (cat === 'todos') {
+      navigate('/productos')
+    } else {
+      navigate(`/productos?categoria=${cat}`)
+    }
+  }
 
   const productosFiltrados =
     categoriaActual === 'todos'
       ? catalogoProductos
       : catalogoProductos.filter((prod) => prod.categoria === categoriaActual)
+
+  const handleAgregarAlCarrito = (producto) => {
+    agregarProducto(producto, 1)
+    setAlertaCarrito(`¡Se añadió "${producto.nombre}" al carrito!`)
+    setTimeout(() => setAlertaCarrito(''), 3000)
+  }
 
   return (
     <section>
@@ -74,13 +50,27 @@ function Productos() {
           Explora todos nuestros productos disponibles para el cuidado, alimentación y salud de tu mascota.
         </p>
 
+        {/* Indicador de categoría seleccionada según useLocation */}
+        {categoriaActual !== 'todos' && (
+          <p className="badge bg-info text-dark px-3 py-2 fs-6">
+            Categoría seleccionada: {categoriaActual.toUpperCase()}
+          </p>
+        )}
+
+        {/* Notificación flotante de carrito */}
+        {alertaCarrito && (
+          <div className="alert alert-success py-2 w-auto d-inline-block mx-auto mb-3" role="alert">
+            ✓ {alertaCarrito}
+          </div>
+        )}
+
         {/* Filtros de categoría reactivos */}
-        <div className="d-flex justify-content-center gap-2 flex-wrap my-4">
+        <div className="d-flex justify-content-center gap-2 flex-wrap my-3">
           <button
             className={`btn btn-sm ${
               categoriaActual === 'todos' ? 'btn-primary' : 'btn-outline-primary'
             }`}
-            onClick={() => setCategoriaActual('todos')}
+            onClick={() => cambiarCategoria('todos')}
           >
             Todos ({catalogoProductos.length})
           </button>
@@ -88,7 +78,7 @@ function Productos() {
             className={`btn btn-sm ${
               categoriaActual === 'farmacia' ? 'btn-primary' : 'btn-outline-primary'
             }`}
-            onClick={() => setCategoriaActual('farmacia')}
+            onClick={() => cambiarCategoria('farmacia')}
           >
             Farmacia
           </button>
@@ -96,7 +86,7 @@ function Productos() {
             className={`btn btn-sm ${
               categoriaActual === 'alimentos' ? 'btn-primary' : 'btn-outline-primary'
             }`}
-            onClick={() => setCategoriaActual('alimentos')}
+            onClick={() => cambiarCategoria('alimentos')}
           >
             Alimentos
           </button>
@@ -104,7 +94,7 @@ function Productos() {
             className={`btn btn-sm ${
               categoriaActual === 'servicios' ? 'btn-primary' : 'btn-outline-primary'
             }`}
-            onClick={() => setCategoriaActual('servicios')}
+            onClick={() => cambiarCategoria('servicios')}
           >
             Servicios
           </button>
@@ -122,6 +112,8 @@ function Productos() {
               descripcion={producto.descripcion}
               imagen={producto.imagen}
               alt={producto.alt}
+              stockInicial={producto.stockInicial}
+              onAgregarCarrito={handleAgregarAlCarrito}
             />
           </div>
         ))}
