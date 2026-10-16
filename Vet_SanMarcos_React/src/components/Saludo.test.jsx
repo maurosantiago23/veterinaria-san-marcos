@@ -3,8 +3,8 @@ import { describe, test, expect } from 'vitest'
 import Saludo from './Saludo'
 
 describe('Componente Saludo', () => {
-  test('muestra el mensaje Hola Mundo', () => {
-    render(<Saludo />)
-    expect(screen.getByText('Hola Mundo')).toBeInTheDocument()
+  test('muestra el nombre recibido', () => {
+    render(<Saludo nombre="Hernán" />)
+    expect(screen.getByText('Hola Hernán')).toBeInTheDocument()
   })
 })

@@ -1,5 +1,7 @@
-function Saludo() {
-  return <h1>Hola Mundo</h1>
+function Saludo({ nombre = 'Mundo' }) {
+  return (
+    <h2>Hola {nombre}</h2>
+  )
 }
 
 export default Saludo

@@ -1,17 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 function Producto({
   id = '1',
-  nombre = 'Producto',
-  precio = '0',
-  descripcion,
+  nombre,
+  precio,
   imagen,
-  alt,
+  descripcion,
   stockInicial = 5,
   onAgregarCarrito,
 }) {
-  // Persistencia de stock en localStorage según Guía II (Paso 4) y Pruebas Unitarias
   const [stock, setStock] = useState(() => {
     const stockGuardado = localStorage.getItem(nombre)
     return stockGuardado !== null ? Number(stockGuardado) : stockInicial
@@ -27,68 +25,72 @@ function Producto({
     }
   }
 
-  const aumentarStock = () => {
-    setStock(stock + 1)
-  }
-
   return (
-    <article className="product-card h-100" id={`prod-${id}`}>
+    <div className="card h-100 product-card">
       {imagen && (
         <img
           className="card-img-top"
           src={imagen}
-          alt={alt || nombre}
+          alt={nombre}
         />
       )}
       <div className="card-body d-flex flex-column">
-        <h3 className="card-title h5">{nombre}</h3>
-        {descripcion && <p className="product-desc small text-muted">{descripcion}</p>}
+        <h5 className="card-title">{nombre}</h5>
 
-        <p className="product-price fw-bold mb-1">Precio: ${precio}</p>
-        <p className="mb-2 text-secondary small">Stock disponible: {stock}</p>
+        {descripcion && (
+          <p className="card-text small text-muted mb-2">
+            {descripcion}
+          </p>
+        )}
 
-        {/* Botones de gestión de stock exigidos por la pauta de pruebas */}
-        <div className="d-flex align-items-center gap-2 mb-3">
-          <span className="small text-muted me-1">Stock:</span>
+        <p className="card-text fw-bold mb-1">
+          Precio: ${precio}
+        </p>
+
+        <p className="mb-3 text-secondary">
+          Stock disponible: {stock}
+        </p>
+
+        {/* Botones de control de stock idénticos a la clase del profesor */}
+        <div className="mb-3">
           <button
-            type="button"
-            className="btn btn-sm btn-danger px-3"
+            className="btn btn-danger me-2"
             onClick={disminuirStock}
             aria-label="-"
           >
             -
           </button>
+
           <button
-            type="button"
-            className="btn btn-sm btn-success px-3"
-            onClick={aumentarStock}
+            className="btn btn-success"
+            onClick={() => setStock(stock + 1)}
             aria-label="+"
           >
             +
           </button>
-        </div>
 
-        {/* Acciones principales: Ver Detalle y Agregar al Carrito */}
-        <div className="mt-auto d-flex flex-column gap-2">
           <Link
             to={`/producto/${id}`}
-            className="btn btn-primary w-100"
+            className="btn btn-primary ms-2"
           >
             Ver detalle
           </Link>
-          {onAgregarCarrito && (
+        </div>
+
+        {/* Botón opcional de carrito */}
+        {onAgregarCarrito && (
+          <div className="mt-auto pt-2 border-top">
             <button
-              type="button"
               className="btn btn-outline-primary btn-sm w-100"
               disabled={stock === 0}
               onClick={() => onAgregarCarrito({ id, nombre, precio, imagen, stock })}
             >
-              {stock === 0 ? 'Sin Stock' : '🛒 Agregar al Carrito'}
+              {stock === 0 ? 'Sin Stock' : '🛒 Agregar al carrito'}
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
-    </article>
+    </div>
   )
 }
 

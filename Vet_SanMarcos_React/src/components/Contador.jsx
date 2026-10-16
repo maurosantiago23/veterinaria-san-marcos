@@ -1,23 +1,16 @@
 import { useState } from 'react'
+import Button from 'react-bootstrap/Button'
 
-function Contador({ inicial = 0 }) {
-  const [contador, setContador] = useState(inicial)
+function Contador() {
+  const [contador, setContador] = useState(0)
 
   return (
-    <div className="d-inline-flex align-items-center gap-2">
-      <button
-        className="btn btn-sm btn-outline-secondary"
-        onClick={() => setContador(contador - 1)}
-      >
-        -
-      </button>
-      <span className="fw-bold px-2">{contador}</span>
-      <button
-        className="btn btn-sm btn-outline-secondary"
-        onClick={() => setContador(contador + 1)}
-      >
-        +
-      </button>
+    <div>
+      <hr />
+      <h2>Contador: {contador}</h2>
+      <Button onClick={() => setContador(contador + 1)} variant="warning">
+        Aumentar
+      </Button>
     </div>
   )
 }

@@ -66,6 +66,11 @@ function DetalleProducto() {
         </ol>
       </nav>
 
+      <div className="mb-4">
+        <h1 className="fw-bold">Detalle del Producto</h1>
+        <p className="text-secondary small">ID del producto: <strong>{id}</strong></p>
+      </div>
+
       <div className="bg-white p-4 p-md-5 rounded shadow-sm border">
         <div className="row g-4 align-items-center">
           {/* Imagen del producto */}
