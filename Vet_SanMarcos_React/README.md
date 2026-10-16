@@ -126,9 +126,8 @@ La instancia EC2 es una computadora independiente en la nube. **No se sincroniza
 8. Lanza la instancia y copia el **Public IPv4 DNS** (o la **IPv4 Pública**).
 
 ### 2. Conectarse por SSH desde Windows (PowerShell)
-En tu PC, abre la carpeta donde descargaste la clave `.pem`:
+En PowerShell, sitúate en la carpeta donde descargaste tu clave `.pem`:
 ```powershell
-cd "$HOME\Downloads"
 # Ajustar permisos de la clave (solo la primera vez en Windows):
 icacls "userReactVite.pem" /reset
 icacls "userReactVite.pem" /grant:r "$($env:USERNAME):(R)"
@@ -154,15 +153,14 @@ nvm use 22
 ### 4. Clonar o actualizar el repositorio en EC2
 * **Primera vez (Clonar):**
   ```bash
-  mkdir -p ~/Downloads
-  cd ~/Downloads
+  cd ~
   git clone https://github.com/maurosantiago23/veterinaria-san-marcos.git
   cd veterinaria-san-marcos/Vet_SanMarcos_React
   npm install
   ```
 * **Actualizaciones posteriores (cuando hagas cambios desde tu PC):**
   ```bash
-  cd ~/Downloads/veterinaria-san-marcos
+  cd ~/veterinaria-san-marcos
   git pull origin main
   cd Vet_SanMarcos_React
   npm install

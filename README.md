@@ -49,7 +49,7 @@ Migración y modernización del sistema hacia una aplicación web dinámica de u
 
 * **Tecnologías:** React 19, Vite, React Router 7, Bootstrap 5 / React-Bootstrap.
 * **Guía completa de trabajo:**
-  👉 Consulta la guía detallada paso a paso en [Vet_SanMarcos_React/README.md](file:///c:/Users/mauro/Downloads/veterinaria-san-marcos/Vet_SanMarcos_React/README.md).
+  👉 Consulta la guía detallada paso a paso en [Vet_SanMarcos_React/README.md](Vet_SanMarcos_React/README.md).
 * **Resumen de inicio rápido en tu PC:**
   ```powershell
   cd Vet_SanMarcos_React
@@ -62,5 +62,5 @@ Migración y modernización del sistema hacia una aplicación web dinámica de u
 
 ## ☁️ Despliegue en AWS Academy EC2
 
-El proyecto incluye la configuración e instrucciones paso a paso para desplegar la aplicación en una instancia **EC2 (Amazon Linux 2023)** si el docente solicita su evaluación en la nube. Todas las instrucciones de AWS, llaves `.pem` y configuración de red están detalladas en [Vet_SanMarcos_React/README.md](file:///c:/Users/mauro/Downloads/veterinaria-san-marcos/Vet_SanMarcos_React/README.md#despliegue-en-aws-academy-ec2-evaluaci%C3%B3n-en-la-nube).
+El proyecto incluye la configuración e instrucciones paso a paso para desplegar la aplicación en una instancia **EC2 (Amazon Linux 2023)** si el docente solicita su evaluación en la nube. Todas las instrucciones de AWS, llaves `.pem` y configuración de red están detalladas en [Vet_SanMarcos_React/README.md](Vet_SanMarcos_React/README.md#despliegue-en-aws-academy-ec2-evaluaci%C3%B3n-en-la-nube).
 
