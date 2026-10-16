@@ -1,0 +1,8 @@
+.vscode/
+node_modules/
+dist/
+*.pem
+.DS_Store
+/Vet_SanMarcos_React/node_modules/
+/Vet_SanMarcos_React/dist/
+/Vet_SanMarcos_React/pdf y comandos/

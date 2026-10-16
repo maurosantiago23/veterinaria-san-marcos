@@ -8,7 +8,7 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
-      <main>
+      <main className="main-content">
         <Routes>
           <Route path="/" element={<Inicio />} />
           <Route path="/productos" element={<Productos />} />
@@ -16,7 +16,15 @@ function App() {
         </Routes>
       </main>
       <footer className="site-footer">
-        <p>Veterinaria San Marcos | DSY1104 - Desarrollo Fullstack II</p>
+        <div className="container">
+          <p>
+            &copy; 2026 Veterinaria San Marcos. Todos los derechos reservados. |
+            Asignatura DSY1104 - Desarrollo Fullstack II
+          </p>
+          <p className="footer-subtext">
+            Dirección: Av. Vicuña Mackenna 491, Santiago | Teléfono: +56 2 2999 8888
+          </p>
+        </div>
       </footer>
     </BrowserRouter>
   )
