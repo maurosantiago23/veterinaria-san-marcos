@@ -13,28 +13,77 @@ function Carrito() {
     total,
   } = useCart()
 
-  const [compraRealizada, setCompraRealizada] = useState(false)
+  const [estadoCompra, setEstadoCompra] = useState(null) // null | 'exito' | 'fallo'
+  const [totalPagado, setTotalPagado] = useState(0)
 
-  const handleFinalizarCompra = () => {
-    setCompraRealizada(true)
+  const handlePagoExitoso = () => {
+    setTotalPagado(total)
+    setEstadoCompra('exito')
     vaciarCarrito()
   }
 
-  if (compraRealizada) {
+  const handlePagoFallido = () => {
+    setEstadoCompra('fallo')
+  }
+
+  if (estadoCompra === 'exito') {
     return (
       <div className="container py-5 text-center">
-        <div className="bg-white p-5 rounded shadow-sm border max-w-lg mx-auto">
+        <div className="bg-white p-4 p-md-5 rounded shadow-sm border mx-auto" style={{ maxWidth: '580px' }}>
           <div className="display-1 text-success mb-3">✓</div>
-          <h2 className="fw-bold mb-2">¡Compra simulada con éxito!</h2>
+          <h2 className="fw-bold mb-2 text-success">¡Compra simulada con éxito!</h2>
           <p className="text-muted mb-4">
             Muchas gracias por confiar en <strong>Veterinaria San Marcos</strong>. Hemos generado tu orden de compra y enviado el comprobante a tu correo.
           </p>
+          <div className="alert alert-success py-2 px-3 small text-start mb-4">
+            <strong>Resumen de tu transacción:</strong>
+            <br />
+            N° de Orden: <code>#VSM-784920</code>
+            <br />
+            Monto Pagado: <code>${totalPagado.toLocaleString('es-CL')} CLP</code> (IVA 19% incluido)
+            <br />
+            Estado: <strong>Autorizado por Transbank / Pasarela Web</strong>
+          </div>
           <button
-            className="btn btn-primary"
-            onClick={() => setCompraRealizada(false)}
+            className="btn btn-primary px-4 py-2"
+            onClick={() => setEstadoCompra(null)}
           >
             ← Volver a la Tienda
           </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (estadoCompra === 'fallo') {
+    return (
+      <div className="container py-5 text-center">
+        <div className="bg-white p-4 p-md-5 rounded shadow-sm border mx-auto" style={{ maxWidth: '580px' }}>
+          <div className="display-1 text-danger mb-3">✕</div>
+          <h2 className="fw-bold mb-2 text-danger">No se pudo realizar el pago</h2>
+          <p className="text-muted mb-4">
+            Lo sentimos, tu transacción no ha podido ser procesada por la entidad bancaria. Por favor verifica los fondos de tu cuenta o intenta con otro medio de pago.
+          </p>
+          <div className="alert alert-danger py-2 px-3 small text-start mb-4">
+            <strong>Detalle del error en pasarela:</strong>
+            <br />
+            Código de rechazo: <code>ERR_TRANS_REJECTED_402</code>
+            <br />
+            Monto no procesado: <code>${total.toLocaleString('es-CL')} CLP</code>
+            <br />
+            <em>Tus productos se mantienen guardados intactos en el carrito para que no pierdas tu pedido.</em>
+          </div>
+          <div className="d-flex justify-content-center gap-2 flex-wrap">
+            <button
+              className="btn btn-primary px-4 py-2"
+              onClick={() => setEstadoCompra(null)}
+            >
+              🔄 Reintentar Pago
+            </button>
+            <Link to="/contacto" className="btn btn-outline-secondary px-4 py-2">
+              Contactar a la Clínica
+            </Link>
+          </div>
         </div>
       </div>
     )
@@ -178,14 +227,22 @@ function Carrito() {
               </span>
             </div>
 
-            <button
-              className="btn btn-primary w-100 py-2 fs-6 mb-2"
-              onClick={handleFinalizarCompra}
-            >
-              Confirmar y Pagar
-            </button>
+            <div className="d-grid gap-2 mb-3">
+              <button
+                className="btn btn-primary py-2 fs-6"
+                onClick={handlePagoExitoso}
+              >
+                💳 Confirmar y Pagar (Simular Éxito)
+              </button>
+              <button
+                className="btn btn-outline-danger btn-sm"
+                onClick={handlePagoFallido}
+              >
+                ⚠️ Simular Pago Rechazado (Fallo)
+              </button>
+            </div>
             <p className="text-center text-muted small m-0">
-              🔒 Pago protegido con simulación local segura.
+              🔒 Simulación de pasarela Webpay / Transbank según pauta.
             </p>
           </div>
         </div>
