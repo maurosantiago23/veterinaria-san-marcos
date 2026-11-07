@@ -46,8 +46,9 @@ function Registro() {
       nuevosErrores.nombre = 'El nombre completo es obligatorio.'
     }
 
-    if (!formData.email.includes('@') || !formData.email.includes('.')) {
-      nuevosErrores.email = 'Ingresa un correo electrónico válido.'
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/
+    if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
+      nuevosErrores.email = 'Ingresa un correo electrónico válido (ejemplo: usuario@dominio.cl).'
     }
 
     if (formData.password.length < 4) {

@@ -8,6 +8,7 @@ function Producto({
   imagen,
   descripcion,
   stockInicial = 5,
+  categoria = '',
   onAgregarCarrito,
 }) {
   const [stock, setStock] = useState(() => {
@@ -24,6 +25,11 @@ function Producto({
       setStock(stock - 1)
     }
   }
+
+  const esServicio =
+    categoria === 'servicios' ||
+    nombre.toLowerCase().includes('consulta') ||
+    nombre.toLowerCase().includes('peluquería')
 
   return (
     <div className="card h-100 product-card">
@@ -48,30 +54,35 @@ function Producto({
         </p>
 
         <p className="mb-3 text-secondary">
-          Stock disponible: {stock}
+          {esServicio
+            ? `Cupos disponibles hoy: ${stock}`
+            : `Stock disponible: ${stock}`}
         </p>
 
-        {/* Botones de control de stock idénticos a la clase del profesor */}
-        <div className="mb-3">
-          <button
-            className="btn btn-danger me-2"
-            onClick={disminuirStock}
-            aria-label="-"
-          >
-            -
-          </button>
-
-          <button
-            className="btn btn-success"
-            onClick={() => setStock(stock + 1)}
-            aria-label="+"
-          >
-            +
-          </button>
+        {/* Control de inventario y enlace a detalle */}
+        <div className="mb-3 d-flex align-items-center flex-wrap gap-2">
+          <div className="btn-group btn-group-sm" role="group" aria-label="Control de inventario">
+            <button
+              className="btn btn-outline-danger"
+              onClick={disminuirStock}
+              aria-label="-"
+              title="Disminuir existencias"
+            >
+              -
+            </button>
+            <button
+              className="btn btn-outline-success"
+              onClick={() => setStock(stock + 1)}
+              aria-label="+"
+              title="Aumentar existencias"
+            >
+              +
+            </button>
+          </div>
 
           <Link
             to={`/producto/${id}`}
-            className="btn btn-primary ms-2"
+            className="btn btn-sm btn-primary ms-auto"
           >
             Ver detalle
           </Link>

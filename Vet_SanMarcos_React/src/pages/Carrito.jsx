@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 
 function Carrito() {
   const {
@@ -13,16 +14,31 @@ function Carrito() {
     total,
   } = useCart()
 
+  const { usuario, estaAutenticado } = useAuth()
+  const navigate = useNavigate()
+
   const [estadoCompra, setEstadoCompra] = useState(null) // null | 'exito' | 'fallo'
   const [totalPagado, setTotalPagado] = useState(0)
+  const [alertaLogin, setAlertaLogin] = useState(false)
 
   const handlePagoExitoso = () => {
+    // Si el usuario no ha iniciado sesión, exigir autenticación según feedback docente
+    if (!estaAutenticado) {
+      setAlertaLogin(true)
+      return
+    }
+    setAlertaLogin(false)
     setTotalPagado(total)
     setEstadoCompra('exito')
     vaciarCarrito()
   }
 
   const handlePagoFallido = () => {
+    if (!estaAutenticado) {
+      setAlertaLogin(true)
+      return
+    }
+    setAlertaLogin(false)
     setEstadoCompra('fallo')
   }
 
@@ -31,18 +47,20 @@ function Carrito() {
       <div className="container py-5 text-center">
         <div className="bg-white p-4 p-md-5 rounded shadow-sm border mx-auto" style={{ maxWidth: '580px' }}>
           <div className="display-1 text-success mb-3">✓</div>
-          <h2 className="fw-bold mb-2 text-success">¡Compra simulada con éxito!</h2>
+          <h2 className="fw-bold mb-2 text-success">¡Compra procesada con éxito!</h2>
           <p className="text-muted mb-4">
-            Muchas gracias por confiar en <strong>Veterinaria San Marcos</strong>. Hemos generado tu orden de compra y enviado el comprobante a tu correo.
+            Muchas gracias por confiar en <strong>Veterinaria San Marcos</strong>. Hemos generado tu orden de compra y enviado el comprobante a tu cuenta.
           </p>
-          <div className="alert alert-success py-2 px-3 small text-start mb-4">
-            <strong>Resumen de tu transacción:</strong>
+          <div className="alert alert-success py-3 px-3 small text-start mb-4">
+            <strong>Resumen oficial de tu compra:</strong>
             <br />
             N° de Orden: <code>#VSM-784920</code>
             <br />
-            Monto Pagado: <code>${totalPagado.toLocaleString('es-CL')} CLP</code> (IVA 19% incluido)
+            Titular: <strong>{usuario?.nombre || 'Cliente Registrado'}</strong> ({usuario?.email})
             <br />
-            Estado: <strong>Autorizado por Transbank / Pasarela Web</strong>
+            Monto Cancelado: <code>${totalPagado.toLocaleString('es-CL')} CLP</code> (IVA 19% incluido)
+            <br />
+            Estado: <strong>Autorizado por Pasarela Web · En preparación</strong>
           </div>
           <button
             className="btn btn-primary px-4 py-2"
@@ -226,6 +244,26 @@ function Carrito() {
                 ${total.toLocaleString('es-CL')} CLP
               </span>
             </div>
+
+            {alertaLogin && (
+              <div className="alert alert-warning py-2 px-3 small mb-3 border-warning">
+                <strong>🔒 Inicio de sesión requerido:</strong>
+                <p className="mb-2 mt-1">
+                  Para emitir tu boleta oficial y asociar la orden médica a tu mascota, debes iniciar sesión con tu cuenta de cliente.
+                </p>
+                <div className="d-flex gap-2">
+                  <Link to="/login" className="btn btn-sm btn-primary">
+                    Ir a Iniciar Sesión →
+                  </Link>
+                  <button
+                    className="btn btn-sm btn-outline-secondary"
+                    onClick={() => setAlertaLogin(false)}
+                  >
+                    Entendido
+                  </button>
+                </div>
+              </div>
+            )}
 
             <div className="d-grid gap-2 mb-3">
               <button

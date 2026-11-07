@@ -56,6 +56,7 @@ function Inicio() {
                 imagen={prod.imagen}
                 alt={prod.alt}
                 stockInicial={prod.stockInicial}
+                categoria={prod.categoria}
                 onAgregarCarrito={(p) => agregarProducto(p, 1)}
               />
             </div>

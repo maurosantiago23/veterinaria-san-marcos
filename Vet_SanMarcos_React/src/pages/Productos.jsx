@@ -113,6 +113,7 @@ function Productos() {
               imagen={producto.imagen}
               alt={producto.alt}
               stockInicial={producto.stockInicial}
+              categoria={producto.categoria}
               onAgregarCarrito={handleAgregarAlCarrito}
             />
           </div>
