@@ -62,6 +62,8 @@ Vite te mostrará en pantalla la dirección local:
 * `npm run build`: Genera los archivos optimizados para producción en la carpeta `dist/`.
 * `npm run lint`: Analiza el código en busca de errores de sintaxis y buenas prácticas.
 * `npm run preview`: Previsualiza localmente el build de producción.
+* `npm test`: Ejecuta la suite de pruebas unitarias con Vitest (13 tests pasando al 100%).
+* `npm run test:coverage`: Genera el reporte formal de cobertura de código (Líneas, Funciones, Ramas).
 
 ---
 
@@ -117,11 +119,11 @@ La instancia EC2 es una computadora independiente en la nube. **No se sincroniza
 2. Ve a **EC2 → Instancias → Lanzar instancias**.
 3. **Nombre:** `VetSanMarcos-React`
 4. **AMI:** Amazon Linux 2023 (`x86_64`). *(No uses Ubuntu ni Amazon Linux 2 a menos que sea necesario)*.
-5. **Tipo de instancia:** `t2.micro` (permitido en el lab).
-6. **Par de claves:** Crea o selecciona un par `.pem` (por ejemplo `userReactVite.pem`) y guárdalo en tu carpeta de Descargas en Windows.
+5. **Tipo de instancia:** `t3.medium` (Cambiamos de `t3.micro` a `t3.medium` para contar con 4 GB de RAM y evitar cuellos de botella de rendimiento).
+6. **Par de claves:** Usar la clave `.pem` del proyecto: `ReactVite.pem` (guardada en tu carpeta de Descargas).
 7. **Red / Grupo de seguridad:**
-   * **SSH (Puerto 22):** Origen `My IP`.
-   * **Custom TCP (Puerto 5173):** Origen `My IP` *(para ver Vite en vivo)*.
+   * **SSH (Puerto 22):** Origen `0.0.0.0/0` (Cualquier lugar) para permitir acceso tanto desde tu casa como desde la red de Duoc.
+   * **Custom TCP (Puerto 5173):** Origen `0.0.0.0/0` (Cualquier lugar) para que la página web abra sin bloqueos de firewall.
    * **HTTP (Puerto 80):** Origen `Cualquier lugar (0.0.0.0/0)` *(solo si se monta con Nginx)*.
 8. Lanza la instancia y copia el **Public IPv4 DNS** (o la **IPv4 Pública**).
 
@@ -129,12 +131,12 @@ La instancia EC2 es una computadora independiente en la nube. **No se sincroniza
 En PowerShell, sitúate en la carpeta donde descargaste tu clave `.pem`:
 ```powershell
 # Ajustar permisos de la clave (solo la primera vez en Windows):
-icacls "userReactVite.pem" /reset
-icacls "userReactVite.pem" /grant:r "$($env:USERNAME):(R)"
-icacls "userReactVite.pem" /inheritance:r
+icacls "ReactVite.pem" /reset
+icacls "ReactVite.pem" /grant:r "$($env:USERNAME):(R)"
+icacls "ReactVite.pem" /inheritance:r
 
 # Conectarse a la instancia:
-ssh -i ".\userReactVite.pem" ec2-user@PUBLIC_IPV4_DNS
+ssh -i ".\ReactVite.pem" ec2-user@PUBLIC_IPV4_DNS
 ```
 
 ### 3. Instalar Node.js en la instancia EC2 (solo la primera vez)
@@ -178,10 +180,8 @@ Luego abre en el navegador de tu computador:
 
 ---
 
-## 🧪 Pruebas Unitarias (Próximas clases)
+## 🧪 Pruebas Unitarias y Cobertura (Implementadas y 100% Funcionales)
 
-Cuando la asignatura aborde pruebas unitarias con Vitest y React Testing Library, las herramientas a incorporar serán:
-```bash
-npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom
-```
-Y se configurará el script `"test": "vitest"` en `package.json`.
+El proyecto cuenta con Vitest y React Testing Library totalmente configurados:
+* `npm test`: Ejecuta las 13 pruebas unitarias automatizadas (`Saludo`, `Producto`, `Login`).
+* `npm run test:coverage`: Genera el reporte formal de cobertura de código (Líneas, Funciones, Ramas).
