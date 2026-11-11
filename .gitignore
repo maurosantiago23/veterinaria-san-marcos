@@ -6,7 +6,21 @@ dist/
 /Vet_SanMarcos_React/node_modules/
 /Vet_SanMarcos_React/dist/
 /Vet_SanMarcos_React/pdf y comandos/
+*.pdf
+
 # Documentos de estudio y guion de presentacion para Mauro y Gabriel
 GUIA_DEFENSA_EXAMEN.txt
 FLUJO_PRESENTACION_PROFESOR.txt
 *.estudio.txt
+
+# Oracle Cloud Wallet y certificados de seguridad (Credenciales y llaves mTLS)
+wallet/
+*.zip
+*.sso
+*.ora
+*.p12
+*.jks
+
+# Java y Maven Build Artifacts
+target/
+*.class
