@@ -100,3 +100,4 @@ public class DetalleBoleta {
         this.subtotal = subtotal;
     }
 }
+

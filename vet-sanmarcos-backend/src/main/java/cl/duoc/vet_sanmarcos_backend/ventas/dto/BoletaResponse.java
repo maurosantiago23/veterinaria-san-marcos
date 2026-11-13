@@ -85,3 +85,4 @@ public class BoletaResponse {
         this.detalles = detalles;
     }
 }
+

@@ -62,3 +62,4 @@ public class BoletaController {
         return ResponseEntity.ok(boletaService.listarPorUsuario(idUsuario));
     }
 }
+

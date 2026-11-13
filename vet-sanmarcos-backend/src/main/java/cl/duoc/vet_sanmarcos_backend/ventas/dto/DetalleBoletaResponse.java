@@ -83,3 +83,4 @@ public class DetalleBoletaResponse {
         this.subtotal = subtotal;
     }
 }
+

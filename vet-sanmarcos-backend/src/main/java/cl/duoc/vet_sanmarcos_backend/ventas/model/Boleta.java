@@ -92,3 +92,4 @@ public class Boleta {
         this.detalles = detalles;
     }
 }
+

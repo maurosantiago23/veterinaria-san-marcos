@@ -18,3 +18,4 @@ public interface BoletaRepository extends JpaRepository<Boleta, Long> {
     // Listar todas las boletas para el panel del Vendedor y Admin ordenadas por fecha reciente
     List<Boleta> findAllByOrderByFechaEmisionDesc();
 }
+

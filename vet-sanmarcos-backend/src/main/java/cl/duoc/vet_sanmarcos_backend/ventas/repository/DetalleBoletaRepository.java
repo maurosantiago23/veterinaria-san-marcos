@@ -14,3 +14,4 @@ public interface DetalleBoletaRepository extends JpaRepository<DetalleBoleta, Lo
 
     List<DetalleBoleta> findByBoletaIdBoleta(Long idBoleta);
 }
+
