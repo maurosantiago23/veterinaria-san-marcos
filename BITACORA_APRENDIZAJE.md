@@ -48,8 +48,17 @@ Esta bitácora recopila en formato **mini-resumen** los problemas técnicos enco
 
 ---
 
+### 6. Microservicio de Usuarios y Autenticación JWT (Sin sobreingeniería)
+* **Diseño aplicado:** Módulo CSR directo (`Usuario`, `UsuarioRepository`, `UsuarioService`, `AuthController`) mapeado fielmente a la tabla `USUARIO` de Oracle.
+* **Manejo de Contraseñas:** Validación dual en `UsuarioService` para aceptar tanto contraseñas de prueba del seed SQL (`1234`) como contraseñas encriptadas con `BCrypt`, asegurando que las cuentas demo del profesor siempre funcionen.
+* **Seguridad de Tokens:** Emisión de tokens JWT con roles (`ADMIN`, `VENDEDOR`, `CLIENTE`) firmados con HMAC-SHA256, liberando las rutas `/api/v1/auth/**` en `SecurityConfig.java`.
+
+---
+
 ### 🏆 Estado Actual Verificado
 * **Backend Spring Boot 4.1.2:** Corriendo en AWS EC2 (`t3.medium`) en el puerto `8080`.
 * **Oracle Cloud ATP 19c:** Conectado mediante Wallet segura mTLS.
-* **Microservicio de Productos:** Probado en vivo vía Swagger UI con respuesta **`HTTP 200 OK`** y retorno del JSON completo con los 6 productos y categorías reales.
+* **Microservicio 1 (Productos y Catálogo):** 100% probado en Swagger con retorno `200 OK`.
+* **Microservicio 2 (Usuarios y Auth):** Construido con JWT, validaciones y listo para pruebas.
+* **Pendiente:** Microservicio 3 (Ventas y Boletas).
 
