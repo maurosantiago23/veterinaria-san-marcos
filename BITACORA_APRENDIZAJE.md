@@ -55,10 +55,18 @@ Esta bitácora recopila en formato **mini-resumen** los problemas técnicos enco
 
 ---
 
+### 7. Microservicio de Ventas y Boletas (Integración entre dominios)
+* **Diseño aplicado:** Módulo CSR completo (`Boleta`, `DetalleBoleta`, `BoletaRepository`, `DetalleBoletaRepository`, `BoletaService`, `BoletaController`) mapeado a las tablas `BOLETA` y `DETALLE_BOLETA` en Oracle Cloud.
+* **Comunicación entre Microservicios:** `BoletaService` actúa como el servicio híbrido: consume `UsuarioRepository` para validar al titular y `ProductoService` para verificar y descontar stock clínico.
+* **Transaccionalidad (`@Transactional`):** Garantiza atomicidad; si un ítem falla por stock insuficiente, se aplica rollback automático y no se crea la boleta ni se altera el inventario.
+
+---
+
 ### 🏆 Estado Actual Verificado
 * **Backend Spring Boot 4.1.2:** Corriendo en AWS EC2 (`t3.medium`) en el puerto `8080`.
 * **Oracle Cloud ATP 19c:** Conectado mediante Wallet segura mTLS.
 * **Microservicio 1 (Productos y Catálogo):** 100% probado en Swagger con retorno `200 OK`.
-* **Microservicio 2 (Usuarios y Auth):** Construido con JWT, validaciones y listo para pruebas.
-* **Pendiente:** Microservicio 3 (Ventas y Boletas).
+* **Microservicio 2 (Usuarios y Auth):** 100% construido con JWT y roles (ADMIN, VENDEDOR, CLIENTE).
+* **Microservicio 3 (Ventas y Boletas):** 100% construido con emisión transaccional de boletas y descuento de stock.
+* **¡Backend Spring Boot completado en su totalidad!**
 

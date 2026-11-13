@@ -43,6 +43,10 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/v1/productos/**"
                 ).permitAll()
+                // Endpoints de emision y consulta de boletas / ventas
+                .requestMatchers(
+                    "/api/v1/boletas/**"
+                ).permitAll()
                 // Resto de endpoints protegidos
                 .anyRequest().authenticated()
             );
