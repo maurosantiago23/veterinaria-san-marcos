@@ -24,3 +24,6 @@ wallet/
 # Java y Maven Build Artifacts
 target/
 *.class
+
+# Carpeta de entregables finales
+Entrega 3 Fullstack II/
