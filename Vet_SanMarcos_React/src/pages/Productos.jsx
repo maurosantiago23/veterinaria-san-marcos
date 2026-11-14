@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import Producto from '../components/Producto.jsx'
 import { catalogoProductos } from '../data/productos'
 import { useCart } from '../context/CartContext'
+import { productosApi, normalizarProducto } from '../services/api'
 
 function Productos() {
   const location = useLocation()
@@ -15,6 +16,41 @@ function Productos() {
 
   const [categoriaActual, setCategoriaActual] = useState(categoriaURL)
   const [alertaCarrito, setAlertaCarrito] = useState('')
+  const [productos, setProductos] = useState(() => catalogoProductos.map(normalizarProducto))
+  const [cargando, setCargando] = useState(true)
+  const [origenDatos, setOrigenDatos] = useState('cargando') // 'oracle' | 'local' | 'cargando'
+
+  // Cargar productos desde el Microservicio de Productos (Spring Boot + Oracle Cloud)
+  useEffect(() => {
+    let cancelado = false
+
+    async function obtenerCatalogo() {
+      try {
+        setCargando(true)
+        const data = await productosApi.obtenerTodos()
+        if (!cancelado && Array.isArray(data) && data.length > 0) {
+          setProductos(data.map(normalizarProducto))
+          setOrigenDatos('oracle')
+        }
+      } catch (err) {
+        console.warn('Backend no disponible, usando catálogo local de respaldo:', err.message)
+        if (!cancelado) {
+          setProductos(catalogoProductos.map(normalizarProducto))
+          setOrigenDatos('local')
+        }
+      } finally {
+        if (!cancelado) {
+          setCargando(false)
+        }
+      }
+    }
+
+    obtenerCatalogo()
+
+    return () => {
+      cancelado = true
+    }
+  }, [])
 
   useEffect(() => {
     if (categoriaURL) {
@@ -33,8 +69,8 @@ function Productos() {
 
   const productosFiltrados =
     categoriaActual === 'todos'
-      ? catalogoProductos
-      : catalogoProductos.filter((prod) => prod.categoria === categoriaActual)
+      ? productos
+      : productos.filter((prod) => prod.categoria === categoriaActual)
 
   const handleAgregarAlCarrito = (producto) => {
     agregarProducto(producto, 1)
@@ -49,6 +85,25 @@ function Productos() {
         <p className="text-muted">
           Explora todos nuestros productos disponibles para el cuidado, alimentación y salud de tu mascota.
         </p>
+
+        {/* Indicador de estado de conexión a Oracle Cloud */}
+        <div className="mb-3">
+          {origenDatos === 'oracle' && (
+            <span className="badge bg-success-subtle text-success border border-success-subtle px-3 py-1">
+              ● Conectado en Vivo a Oracle Autonomous DB (ATP 19c)
+            </span>
+          )}
+          {origenDatos === 'local' && (
+            <span className="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-1">
+              ○ Catálogo Local de Demostración (Modo Respaldo)
+            </span>
+          )}
+          {cargando && (
+            <span className="badge bg-light text-muted border px-3 py-1">
+              ⏳ Sincronizando catálogo con base de datos...
+            </span>
+          )}
+        </div>
 
         {/* Indicador de categoría seleccionada según useLocation */}
         {categoriaActual !== 'todos' && (
@@ -72,7 +127,15 @@ function Productos() {
             }`}
             onClick={() => cambiarCategoria('todos')}
           >
-            Todos ({catalogoProductos.length})
+            Todos ({productos.length})
+          </button>
+          <button
+            className={`btn btn-sm ${
+              categoriaActual === 'servicios' ? 'btn-primary' : 'btn-outline-primary'
+            }`}
+            onClick={() => cambiarCategoria('servicios')}
+          >
+            Servicios Médicos
           </button>
           <button
             className={`btn btn-sm ${
@@ -92,11 +155,11 @@ function Productos() {
           </button>
           <button
             className={`btn btn-sm ${
-              categoriaActual === 'servicios' ? 'btn-primary' : 'btn-outline-primary'
+              categoriaActual === 'accesorios' ? 'btn-primary' : 'btn-outline-primary'
             }`}
-            onClick={() => cambiarCategoria('servicios')}
+            onClick={() => cambiarCategoria('accesorios')}
           >
-            Servicios
+            Accesorios
           </button>
         </div>
       </div>

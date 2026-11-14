@@ -1,11 +1,36 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Producto from '../components/Producto.jsx'
 import { catalogoProductos } from '../data/productos'
 import { useCart } from '../context/CartContext'
+import { productosApi, normalizarProducto } from '../services/api'
 
 function Inicio() {
   const { agregarProducto } = useCart()
-  const productosDestacados = catalogoProductos.slice(0, 3)
+  const [productosDestacados, setProductosDestacados] = useState(() =>
+    catalogoProductos.slice(0, 3).map(normalizarProducto)
+  )
+
+  useEffect(() => {
+    let cancelado = false
+
+    async function cargarDestacados() {
+      try {
+        const data = await productosApi.obtenerTodos()
+        if (!cancelado && Array.isArray(data) && data.length > 0) {
+          setProductosDestacados(data.slice(0, 3).map(normalizarProducto))
+        }
+      } catch {
+        // Respaldo local
+      }
+    }
+
+    cargarDestacados()
+
+    return () => {
+      cancelado = true
+    }
+  }, [])
 
   return (
     <>
@@ -41,7 +66,7 @@ function Inicio() {
         <div className="text-center mb-4">
           <h2>Productos y Servicios Destacados</h2>
           <p className="text-muted">
-            Una muestra de lo que puedes encontrar en nuestra clínica y farmacia veterinaria.
+            Una muestra de lo que puedes encontrar en nuestra clínica y farmacia veterinaria sincronizada con Oracle Cloud.
           </p>
         </div>
 
@@ -64,51 +89,20 @@ function Inicio() {
         </div>
       </section>
 
-      {/* Sección de Referencias */}
-      <section className="references-section">
-        <h3>Referencias de Interés y Enlaces Relacionados</h3>
-        <ul>
-          <li>
-            <a
-              href="https://www.colegiomedicoveterinario.cl/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Colegio Médico Veterinario de Chile (COLMEVET)
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://www.sag.cl/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Servicio Agrícola y Ganadero (SAG)
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://developer.mozilla.org/es/docs/Web/HTML"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Documentación Oficial HTML5 - MDN Web Docs
-            </a>
-          </li>
-        </ul>
-      </section>
-
-      {/* Sección de Video */}
-      <section className="video-section">
-        <h2>Mascotas y bienestar animal</h2>
-        <div className="video-container">
-          <iframe
-            src="https://www.youtube.com/embed/ybN5qdpvrko?si=Y0getmfdYRDmW3Xl"
-            title="Video de bienestar animal - Veterinaria San Marcos"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-          />
+      {/* Banner de Servicios Clínicos */}
+      <section className="bg-light p-4 rounded-3 border mb-5">
+        <div className="row align-items-center">
+          <div className="col-md-8">
+            <h3 className="fw-bold text-primary mb-2">¿Necesitas una consulta médica para tu mascota?</h3>
+            <p className="mb-0 text-muted">
+              Contamos con médicos veterinarios disponibles y box de atención equipado para consultas generales, vacunas y procedimientos.
+            </p>
+          </div>
+          <div className="col-md-4 text-md-end mt-3 mt-md-0">
+            <Link to="/productos?categoria=servicios" className="btn btn-primary btn-lg">
+              Ver Cupos Disponibles
+            </Link>
+          </div>
         </div>
       </section>
     </>

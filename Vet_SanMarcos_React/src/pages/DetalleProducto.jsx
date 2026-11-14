@@ -2,25 +2,60 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { catalogoProductos } from '../data/productos'
 import { useCart } from '../context/CartContext'
+import { productosApi, normalizarProducto } from '../services/api'
 
 function DetalleProducto() {
   const { id } = useParams()
   const { agregarProducto } = useCart()
 
-  // Buscar el producto por id numérico o por código
-  const producto = catalogoProductos.find(
-    (p) => String(p.id) === String(id) || p.codigo.toLowerCase() === String(id).toLowerCase()
-  )
+  // Buscar primero en el respaldo local
+  const [producto, setProducto] = useState(() => {
+    const encontrado = catalogoProductos.find(
+      (p) => String(p.id) === String(id) || p.codigo?.toLowerCase() === String(id).toLowerCase()
+    )
+    return encontrado ? normalizarProducto(encontrado) : null
+  })
 
-  // Recuperar stock persistido en localStorage
+  // Sincronizar en vivo con la API de Spring Boot si está disponible
+  useEffect(() => {
+    let cancelado = false
+
+    async function cargarDetalleApi() {
+      if (id && !isNaN(Number(id))) {
+        try {
+          const data = await productosApi.obtenerPorId(id)
+          if (!cancelado && data) {
+            setProducto(normalizarProducto(data))
+          }
+        } catch {
+          // Mantiene el producto del estado inicial
+        }
+      }
+    }
+
+    cargarDetalleApi()
+
+    return () => {
+      cancelado = true
+    }
+  }, [id])
+
+  // Recuperar stock persistido en localStorage o el stock del producto
   const [stock, setStock] = useState(() => {
     if (!producto) return 0
     const guardado = localStorage.getItem(producto.nombre)
-    return guardado !== null ? Number(guardado) : producto.stockInicial || 5
+    return guardado !== null ? Number(guardado) : producto.stock || 5
   })
 
   const [cantidad, setCantidad] = useState(1)
   const [mensajeAgregado, setMensajeAgregado] = useState(false)
+
+  useEffect(() => {
+    if (producto) {
+      setStock((prev) => (prev > 0 ? prev : producto.stock || 5))
+      localStorage.setItem(producto.nombre, stock)
+    }
+  }, [producto])
 
   useEffect(() => {
     if (producto) {
@@ -40,10 +75,14 @@ function DetalleProducto() {
     )
   }
 
+  const esServicio =
+    producto.categoria === 'servicios' ||
+    producto.nombre.toLowerCase().includes('consulta') ||
+    producto.nombre.toLowerCase().includes('peluquería')
+
   const handleAgregar = () => {
     if (stock <= 0) return
     agregarProducto(producto, cantidad)
-    // Reducir stock disponible
     setStock((prev) => Math.max(0, prev - cantidad))
     setMensajeAgregado(true)
     setTimeout(() => setMensajeAgregado(false), 3000)
@@ -58,7 +97,7 @@ function DetalleProducto() {
             <Link to="/" className="text-decoration-none">Inicio</Link>
           </li>
           <li className="breadcrumb-item">
-            <Link to="/productos" className="text-decoration-none">Productos</Link>
+            <Link to="/productos" className="text-decoration-none">Catálogo</Link>
           </li>
           <li className="breadcrumb-item active" aria-current="page">
             {producto.nombre}
@@ -66,106 +105,90 @@ function DetalleProducto() {
         </ol>
       </nav>
 
-      <div className="mb-4">
-        <h1 className="fw-bold">Detalle del Producto</h1>
-        <p className="text-secondary small">ID del producto: <strong>{id}</strong></p>
-      </div>
+      {/* Alerta de confirmación de agregado */}
+      {mensajeAgregado && (
+        <div className="alert alert-success alert-dismissible fade show" role="alert">
+          ✓ Se agregaron <strong>{cantidad}</strong> unidad(es) de <strong>{producto.nombre}</strong> al carrito de compras.
+          <Link to="/carrito" className="ms-2 alert-link">Ver Carrito</Link>
+        </div>
+      )}
 
-      <div className="bg-white p-4 p-md-5 rounded shadow-sm border">
-        <div className="row g-4 align-items-center">
-          {/* Imagen del producto */}
-          <div className="col-12 col-md-5 text-center">
+      <div className="row g-4 align-items-center">
+        {/* Imagen del producto */}
+        <div className="col-12 col-md-5 text-center">
+          <div className="p-3 border rounded bg-white shadow-sm">
             <img
               src={producto.imagen}
               alt={producto.alt || producto.nombre}
-              className="img-fluid rounded border p-3"
+              className="img-fluid rounded"
               style={{ maxHeight: '380px', objectFit: 'contain' }}
             />
           </div>
+        </div>
 
-          {/* Información del producto */}
-          <div className="col-12 col-md-7">
-            <span className="badge bg-secondary mb-2 text-uppercase">
-              {producto.categoria} · {producto.codigo}
-            </span>
-            <h1 className="h2 fw-bold text-dark mb-2">{producto.nombre}</h1>
-            <p className="text-muted mb-3">{producto.descripcion}</p>
+        {/* Información y compra */}
+        <div className="col-12 col-md-7">
+          <span className="badge bg-secondary text-uppercase mb-2">
+            {producto.categoria}
+          </span>
+          <h1 className="h2 fw-bold text-primary mb-2">{producto.nombre}</h1>
+          <p className="text-muted small mb-2">Código Clínico: <code>{producto.codigo}</code></p>
 
-            <div className="d-flex align-items-baseline gap-3 mb-3">
-              <h3 className="text-primary fw-bold m-0">${producto.precio} CLP</h3>
-              <span
-                className={`badge ${
-                  stock > 3 ? 'bg-success' : stock > 0 ? 'bg-warning text-dark' : 'bg-danger'
-                }`}
-              >
-                {stock > 0 ? `Stock disponible: ${stock}` : 'Agotado'}
+          <p className="lead text-dark mb-3">{producto.descripcion}</p>
+
+          <h3 className="text-success fw-bold mb-3">
+            ${producto.precio} <span className="fs-6 text-muted fw-normal">CLP (IVA incluido)</span>
+          </h3>
+
+          <p className="mb-3">
+            <strong>Disponibilidad: </strong>
+            {stock > 0 ? (
+              <span className="badge bg-success">
+                {esServicio ? `Cupos disponibles hoy: ${stock}` : `En stock (${stock} unidades)`}
               </span>
-            </div>
-
-            {/* Características destacadas */}
-            {producto.caracteristicas && (
-              <div className="mb-4">
-                <h5 className="h6 fw-bold">Beneficios y detalles:</h5>
-                <ul className="small text-secondary ps-3 mb-0">
-                  {producto.caracteristicas.map((c, i) => (
-                    <li key={i}>{c}</li>
-                  ))}
-                </ul>
-              </div>
+            ) : (
+              <span className="badge bg-danger">Agotado temporalmente</span>
             )}
+          </p>
 
-            {/* Selector de cantidad y botón agregar */}
-            <div className="d-flex flex-wrap align-items-center gap-3 mt-4 pt-3 border-top">
-              <div className="d-flex align-items-center gap-2">
-                <label htmlFor="cantidad-input" className="form-label m-0 fw-semibold">
-                  Cantidad:
-                </label>
-                <div className="input-group" style={{ width: '130px' }}>
-                  <button
-                    className="btn btn-outline-secondary"
-                    type="button"
-                    disabled={cantidad <= 1}
-                    onClick={() => setCantidad((c) => Math.max(1, c - 1))}
-                  >
-                    -
-                  </button>
-                  <input
-                    id="cantidad-input"
-                    type="text"
-                    readOnly
-                    className="form-control text-center"
-                    value={cantidad}
-                  />
-                  <button
-                    className="btn btn-outline-secondary"
-                    type="button"
-                    disabled={cantidad >= stock}
-                    onClick={() => setCantidad((c) => Math.min(stock, c + 1))}
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
+          {/* Características destacadas */}
+          <div className="mb-4">
+            <h5 className="fw-semibold">Detalles y Especificaciones:</h5>
+            <ul className="list-unstyled ps-3">
+              {producto.caracteristicas?.map((item, idx) => (
+                <li key={idx} className="mb-1 text-secondary">
+                  ✓ {item}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-              <button
-                className="btn btn-primary px-4 py-2"
-                onClick={handleAgregar}
+          {/* Selector de cantidad y botón */}
+          <div className="d-flex align-items-center gap-3">
+            <div className="input-group" style={{ maxWidth: '140px' }}>
+              <span className="input-group-text">Cant.</span>
+              <input
+                type="number"
+                min="1"
+                max={stock}
+                value={cantidad}
+                onChange={(e) => setCantidad(Math.max(1, Math.min(stock, Number(e.target.value))))}
+                className="form-control text-center"
                 disabled={stock <= 0}
-              >
-                {stock > 0 ? '🛒 Agregar al Carrito' : 'Sin Stock'}
-              </button>
-
-              <Link to="/carrito" className="btn btn-outline-secondary px-3 py-2">
-                Ver Carrito
-              </Link>
+              />
             </div>
 
-            {/* Mensaje de confirmación reactivo */}
-            {mensajeAgregado && (
-              <div className="alert alert-success mt-3 py-2 px-3 small" role="alert">
-                ✓ ¡{cantidad} unidad(es) de <strong>{producto.nombre}</strong> agregadas al carrito!
-              </div>
-            )}
+            <button
+              onClick={handleAgregar}
+              className="btn btn-primary px-4 py-2"
+              disabled={stock <= 0}
+            >
+              {stock <= 0 ? 'Sin Stock' : (esServicio ? '📅 Reservar Cupo' : '🛒 Agregar al Carrito')}
+            </button>
+
+            <Link to="/productos" className="btn btn-outline-secondary">
+              Volver al Catálogo
+            </Link>
           </div>
         </div>
       </div>

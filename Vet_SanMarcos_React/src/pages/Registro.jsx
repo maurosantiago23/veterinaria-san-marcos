@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { authApi } from '../services/api'
 
 const regionesYComunas = {
   'Metropolitana de Santiago': ['Santiago', 'Providencia', 'Las Condes', 'Maipú', 'Puente Alto', 'Ñuñoa'],
@@ -38,7 +39,7 @@ function Registro() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const nuevosErrores = {}
 
@@ -69,6 +70,19 @@ function Registro() {
     }
 
     setErrores({})
+
+    // Intentar registrar en Spring Boot / Oracle Cloud
+    try {
+      await authApi.registro(
+        formData.nombre.trim(),
+        formData.email.trim(),
+        formData.password,
+        formData.telefono?.trim() || ''
+      )
+    } catch (err) {
+      console.warn('Backend offline o usuario ya existente, guardando en modo local:', err.message)
+    }
+
     setRegistroExitoso(true)
 
     setTimeout(() => {

@@ -7,11 +7,12 @@ function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [exito, setExito] = useState('')
+  const [enviando, setEnviando] = useState(false)
 
   const { login } = useAuth()
   const navigate = useNavigate()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
 
     // Reglas de validación exigidas por la Guía II (Paso 9) y Pruebas Unitarias
@@ -27,16 +28,25 @@ function Login() {
 
     // Datos válidos: limpiar errores
     setError('')
-    const usuarioLogueado = login(email, password)
-    setExito(`¡Bienvenido/a, ${usuarioLogueado.nombre}! (Rol: ${usuarioLogueado.rol})`)
+    setEnviando(true)
 
-    setTimeout(() => {
-      if (usuarioLogueado.rol === 'admin') {
-        navigate('/admin')
-      } else {
-        navigate('/')
-      }
-    }, 1200)
+    try {
+      const usuarioLogueado = await login(email, password)
+      const origenTexto = usuarioLogueado.origen === 'oracle' ? ' · Oracle Cloud' : ''
+      setExito(`¡Bienvenido/a, ${usuarioLogueado.nombre}! (Rol: ${usuarioLogueado.rol.toUpperCase()}${origenTexto})`)
+
+      setTimeout(() => {
+        if (usuarioLogueado.rol === 'admin' || usuarioLogueado.rol === 'vendedor') {
+          navigate('/admin')
+        } else {
+          navigate('/')
+        }
+      }, 1200)
+    } catch (err) {
+      setError(err.message || 'Error al validar credenciales')
+    } finally {
+      setEnviando(false)
+    }
   }
 
   return (
@@ -47,7 +57,7 @@ function Login() {
       >
         <h1 className="h3 mb-2 text-center fw-bold">Iniciar Sesión</h1>
         <p className="text-muted text-center mb-4 small">
-          Ingresa tus credenciales autorizadas para acceder.
+          Ingresa tus credenciales autorizadas para acceder al sistema.
         </p>
 
         {error && (
@@ -58,7 +68,7 @@ function Login() {
 
         {exito && (
           <div className="alert alert-success py-2 px-3 small" role="alert">
-            {exito}
+            ✓ {exito}
           </div>
         )}
 
@@ -75,6 +85,7 @@ function Login() {
               placeholder="usuario@dominio.cl"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
+              disabled={enviando}
             />
           </div>
 
@@ -90,6 +101,7 @@ function Login() {
               placeholder="••••••••"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              disabled={enviando}
             />
             <div className="form-text small">
               Mínimo 4 caracteres.
@@ -99,8 +111,9 @@ function Login() {
           <button
             type="submit"
             className="btn btn-primary w-100 py-2 fw-semibold"
+            disabled={enviando}
           >
-            Ingresar
+            {enviando ? 'Validando con JWT...' : 'Ingresar'}
           </button>
 
           <div className="text-center mt-3 pt-3 border-top">
@@ -112,13 +125,13 @@ function Login() {
             </span>
           </div>
 
-          {/* Guía rápida de roles simulados para el profesor */}
-          <div className="mt-4 p-2 bg-light rounded border text-secondary small">
-            <strong>Credenciales de prueba sugeridas:</strong>
-            <ul className="mb-0 ps-3 mt-1" style={{ fontSize: '0.8rem' }}>
-              <li><strong>Admin:</strong> <code>admin@veterinaria.cl</code> (clave: 1234)</li>
-              <li><strong>Vendedor:</strong> <code>vendedor@veterinaria.cl</code> (clave: 1234)</li>
-              <li><strong>Cliente:</strong> <code>cliente@correo.cl</code> (clave: 1234)</li>
+          {/* Guía rápida de credenciales para el profesor */}
+          <div className="mt-4 p-3 bg-light rounded border text-secondary small">
+            <strong>Credenciales oficiales en Oracle Cloud (ATP 19c):</strong>
+            <ul className="mb-0 ps-3 mt-2" style={{ fontSize: '0.85rem' }}>
+              <li><strong>Administrador:</strong> <code>admin@vetsanmarcos.cl</code> (clave: <code>1234</code>)</li>
+              <li><strong>Cliente:</strong> <code>mauro@duocuc.cl</code> (clave: <code>1234</code>)</li>
+              <li><strong>Vendedor:</strong> <code>vendedor@vetsanmarcos.cl</code> (clave: <code>1234</code>)</li>
             </ul>
           </div>
         </form>

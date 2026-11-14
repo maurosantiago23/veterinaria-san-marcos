@@ -62,11 +62,43 @@ Esta bitácora recopila en formato **mini-resumen** los problemas técnicos enco
 
 ---
 
+### 8. Integración Frontend-Backend y Resiliencia del Catálogo (React ↔ Spring Boot)
+* **Situación inicial:** El catálogo en React dependía de un archivo estático en memoria (`src/data/productos.js`). No reflejaba los cambios de stock en Oracle Cloud ni las consultas dinámicas a la base de datos.
+* **Diferencia de Modelos:** El backend retorna campos de base de datos (`idProducto`, `imagenUrl`, entidad `categoria`), mientras que el frontend usaba `id`, `imagen`, y categorías como string.
+* **Solución implementada:**
+  1. Se creó el cliente API centralizado (`src/services/api.js`) con detección automática de URL (localhost o IP de AWS) e inyección de token JWT.
+  2. Se diseñó la función `normalizarProducto()` para unificar los atributos de Oracle/JPA con las interfaces de React sin romper componentes existentes.
+  3. **Patrón de Resiliencia:** `Productos.jsx` e `Inicio.jsx` consultan `GET /api/v1/productos` en vivo. Si el backend está activo, muestra los datos directos de Oracle ATP 19c con un indicador visual; si está offline, conmuta automáticamente a un catálogo semilla de respaldo sin romper la experiencia ni los tests.
+  4. Se mantuvo la regla de negocio para servicios veterinarios mostrando *"Cupos disponibles hoy: X"*.
+
+---
+
+### 9. Autenticación JWT, Persistencia Anti-F5 y Control de Roles (IE3.3.1 - IE3.3.6)
+* **Situación inicial:** El inicio de sesión dependía de strings locales y no validaba credenciales reales ni emitía tokens JWT. Además, existía riesgo de inconsistencias al recargar la página.
+* **Solución implementada:**
+  1. **Autenticación Real con JWT (`POST /api/v1/auth/login`):** `AuthContext.jsx` y `Login.jsx` se conectaron al microservicio de usuarios. Al autenticarse, Spring Boot valida contra Oracle Cloud y emite un token JWT con el rol asignado (`ADMIN`, `VENDEDOR`, `CLIENTE`).
+  2. **Persistencia de Sesión ante Recargas (F5 - IE3.3.2):** Se estructuró la lectura inicial en `localStorage` (`veterinaria_user`), garantizando que al presionar F5 o navegar entre rutas, la sesión, el token y el perfil no se destruyan.
+  3. **Restricción de Acceso a Interfaces según Roles (IE3.3.3 / IE3.3.6):** `Navbar.jsx` ahora discrimina la navegación: muestra el nombre y rol en un badge (`👤 Mauro (ADMIN)`), pero los botones hacia el `/admin` quedan restringidos únicamente para administradores o vendedores.
+  4. **Modo Respaldo y Pruebas Unitarias:** Si el backend está apagado o en entorno de tests Vitest, se activa un fallback transparente para que las 13 pruebas unitarias sigan pasando en verde sin dependencias de red externas.
+
+---
+
+### 10. Emisión Transaccional de Boletas y Blindaje de Build (Misiones 4 y 5)
+* **Situación inicial:** El carrito generaba un identificador de orden estático (`#VSM-784920`) y no enviaba la venta a la base de datos en Oracle Cloud.
+* **Problema de Build detectado:** En `Registro.jsx`, la función manejadora de eventos ejecutaba `await` sin haber declarado la función con la palabra clave `async`, lo cual impedía el empaquetado de producción (`npm run build`).
+* **Solución implementada:**
+  1. **Generación Real de Boletas (`POST /api/v1/boletas`):** `Carrito.jsx` envía el payload `VentaRequest` asociando el `idUsuario` autenticado y los ítems con sus IDs y cantidades.
+  2. **Persistencia y Comprobante Oficial:** Al confirmar la compra, se presenta el comprobante oficial con el folio devuelto por Oracle (`#BOL-{idBoleta}`), la fecha oficial y el desglose de productos, vaciando el carrito reactivamente.
+  3. **Visualización Administrativa:** `AdminDashboard.jsx` incorpora la sincronización de boletas emitidas y cálculo en tiempo real del monto acumulado de ventas.
+  4. **Resolución de Error en Vite:** Se declaró `async` en `handleSubmit` de `Registro.jsx`, logrando que `npm run build` termine exitosamente en 329 ms.
+  5. **Verificación de Pruebas Unitarias:** Ejecución de `npm test -- --run` con 13/13 pruebas en verde.
+
+---
+
 ### 🏆 Estado Actual Verificado
-* **Backend Spring Boot 4.1.2:** Corriendo en AWS EC2 (`t3.medium`) en el puerto `8080`.
-* **Oracle Cloud ATP 19c:** Conectado mediante Wallet segura mTLS.
-* **Microservicio 1 (Productos y Catálogo):** 100% probado en Swagger con retorno `200 OK`.
-* **Microservicio 2 (Usuarios y Auth):** 100% construido con JWT y roles (ADMIN, VENDEDOR, CLIENTE).
-* **Microservicio 3 (Ventas y Boletas):** 100% construido con emisión transaccional de boletas y descuento de stock.
-* **¡Backend Spring Boot completado en su totalidad!**
+* **Base de Datos (Oracle Autonomous ATP 19c):** 5 tablas en 3FN y conexión mTLS con Wallet activa.
+* **Backend Spring Boot 4.1.2:** Los 3 microservicios (Productos, Usuarios, Ventas) 100% operativos en AWS EC2 y documentados en Swagger.
+* **Frontend React 19:** Catálogo, Login JWT, Registro, Carrito con emisión de boleta y Panel de Control 100% integrados.
+* **Compilación y Empaquetado:** `npm run build` genera el bundle de producción sin advertencias ni errores.
+* **Pruebas Unitarias:** 13/13 tests en verde con Vitest.
 

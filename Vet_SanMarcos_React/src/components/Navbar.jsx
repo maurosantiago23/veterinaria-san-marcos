@@ -93,16 +93,24 @@ function Navbar() {
             )}
           </NavLink>
 
-          {/* Estado de Autenticación */}
+          {/* Estado de Autenticación con Roles y Persistencia (IE3.3.2 / IE3.3.3) */}
           {estaAutenticado ? (
             <div className="d-flex align-items-center gap-2 ms-lg-2">
-              <Link
-                to="/admin"
-                className="btn btn-sm btn-outline-warning text-white"
-                title="Panel de Administración"
-              >
-                Panel {usuario.rol === 'admin' ? 'Admin' : 'Vendedor'}
-              </Link>
+              <span className="badge bg-light text-dark border py-2 px-2 d-none d-md-inline-block">
+                👤 {usuario.nombre} <strong className="text-primary">({usuario.rol?.toUpperCase()})</strong>
+              </span>
+
+              {/* Restricción de acceso: Solo admin y vendedor acceden al dashboard */}
+              {(usuario.rol === 'admin' || usuario.rol === 'vendedor') && (
+                <Link
+                  to="/admin"
+                  className="btn btn-sm btn-outline-warning text-white"
+                  title="Panel de Administración"
+                >
+                  Panel {usuario.rol === 'admin' ? 'Admin' : 'Vendedor'}
+                </Link>
+              )}
+
               <button
                 type="button"
                 className="btn btn-sm btn-outline-light"
