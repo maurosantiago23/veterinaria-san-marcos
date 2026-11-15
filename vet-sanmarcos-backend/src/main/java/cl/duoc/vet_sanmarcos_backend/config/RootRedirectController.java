@@ -14,4 +14,9 @@ public class RootRedirectController {
     public String redirectToSwagger() {
         return "redirect:/swagger-ui/index.html";
     }
+
+    @GetMapping({"/v3/api-docs", "/v3/api-docs/**"})
+    public String redirectToApiDocs() {
+        return "redirect:/api-docs";
+    }
 }
