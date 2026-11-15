@@ -95,10 +95,21 @@ Esta bitácora recopila en formato **mini-resumen** los problemas técnicos enco
 
 ---
 
+### 11. Refinamiento en AWS EC2 y Restricción Estricta de Inventario (IE3.3.3 / IE3.3.6)
+* **Problema 1 (Mapeo de Categorías Oracle):** En la entidad JPA `Categoria.java`, el campo en la base de datos se denomina `nombreCategoria`, por lo que en el frontend `item.categoria?.nombre` retornaba `undefined` al recibir la respuesta real de Oracle ATP 19c.
+  * **Solución:** Se actualizó `normalizarProducto()` en `src/services/api.js` para priorizar `item.categoria?.nombreCategoria`, normalizando el catálogo clínico en vivo.
+* **Problema 2 (Alteración de Stock no Autorizada):** Las tarjetas de producto (`Producto.jsx`) mostraban controles `+` y `-` para modificar el stock a cualquier visitante anónimo sin sesión.
+  * **Solución:** Se aplicó restricción por roles conectando `Producto.jsx` con `useAuth()`. Si el usuario no ha iniciado sesión o posee rol de `CLIENTE`, los botones de modificar stock se **ocultan por completo**, dejando únicamente las acciones permitidas (ver detalle y agregar al carrito). Los controles de inventario solo se muestran si el usuario autenticado tiene rol de `ADMIN`.
+* **Problema 3 (Alineación de Credenciales de Demostración):** Se sincronizaron las pantallas de `Login.jsx` y `AdminDashboard.jsx` con los correos exactos registrados en el script `data.sql` (`admin@veterinaria.cl`, `cliente@duocuc.cl` y `vendedor@veterinaria.cl`, todos con clave `1234`).
+* **Verificación:** Pruebas unitarias de Vitest 13/13 en verde y compilación de producción exitosa en 265 ms.
+
+---
+
 ### 🏆 Estado Actual Verificado
 * **Base de Datos (Oracle Autonomous ATP 19c):** 5 tablas en 3FN y conexión mTLS con Wallet activa.
-* **Backend Spring Boot 4.1.2:** Los 3 microservicios (Productos, Usuarios, Ventas) 100% operativos en AWS EC2 y documentados en Swagger.
-* **Frontend React 19:** Catálogo, Login JWT, Registro, Carrito con emisión de boleta y Panel de Control 100% integrados.
+* **Backend Spring Boot 4.1.2:** Los 3 microservicios (Productos, Usuarios, Ventas) 100% operativos en AWS EC2 (`http://54.198.138.158:8080`) y documentados en Swagger.
+* **Frontend React 19:** Activo en AWS EC2 (`http://54.198.138.158:5173`), integrado con Oracle Cloud, catálogo en vivo, JWT, carrito y boletas.
+* **Seguridad y Roles:** Restricciones de acceso y acciones estrictamente validadas para Administrador, Vendedor y Cliente.
 * **Compilación y Empaquetado:** `npm run build` genera el bundle de producción sin advertencias ni errores.
 * **Pruebas Unitarias:** 13/13 tests en verde con Vitest.
 
