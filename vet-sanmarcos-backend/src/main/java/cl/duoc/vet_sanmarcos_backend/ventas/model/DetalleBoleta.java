@@ -35,7 +35,7 @@ public class DetalleBoleta {
     @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioUnitario;
 
-    @Column(name = "subtotal", nullable = false, precision = 10, scale = 2)
+    @Column(name = "subtotal_linea", nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
 
     public DetalleBoleta() {

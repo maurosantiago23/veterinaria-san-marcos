@@ -105,14 +105,17 @@ Esta bitácora recopila en formato **mini-resumen** los problemas técnicos enco
 
 ---
 
-### 12. Persistencia de Boletas en Oracle Cloud y Sincronización de Stock
-* **Problema detectado:** Al emitir una boleta desde el frontend o Swagger, la transacción fallaba con `ORA-01400: cannot insert NULL into ("ADMIN"."BOLETA"."NUMERO_ORDEN")`. Al hacer rollback `@Transactional`, la boleta no se guardaba y el stock de productos no se descontaba en la base de datos.
-* **Causa:** La tabla `BOLETA` en Oracle Cloud tiene una restricción `NUMERO_ORDEN NOT NULL`, pero la entidad JPA `Boleta.java` omitía el mapeo de dicha columna.
+### 12. Persistencia de Boletas en Oracle Cloud y Corrección de Mapeo JPA
+* **Problemas detectados:**
+  1. Al emitir una boleta, la transacción fallaba inicialmente con `ORA-01400: cannot insert NULL into ("ADMIN"."BOLETA"."NUMERO_ORDEN")` y posteriormente `ORA-01400: cannot insert NULL into ("ADMIN"."BOLETA"."SUBTOTAL")`.
+  2. Luego de mapear dichos campos en el encabezado `BOLETA`, al persistir el detalle surgió `ORA-00904: "SUBTOTAL": invalid identifier` en la tabla `DETALLE_BOLETA`.
+* **Causa raíz:** En la base de datos Oracle Autonomous ATP 19c creada para el proyecto, la tabla `BOLETA` cuenta con columnas obligatorias `NUMERO_ORDEN`, `SUBTOTAL`, `IVA` y `ESTADO_PAGO`. Por su parte, la tabla `DETALLE_BOLETA` define la columna de importe por ítem como **`subtotal_linea`** (no `subtotal`). Las entidades JPA iniciales diferían en estos nombres de columna exactos.
 * **Solución implementada:**
-  1. Se mapeó `@Column(name = "numero_orden", length = 50, nullable = false)` en `Boleta.java` y se asigna el folio único (`ORD-{timestamp}`) en `BoletaService.java`.
-  2. Se expuso `numeroOrden` en `BoletaResponse.java` para el comprobante de cliente.
-  3. En `Producto.jsx`, se agregó sincronización reactiva de `stockInicial` mediante `useEffect` para actualizar de inmediato el stock en pantalla cuando cambia en la base de datos.
-  4. En `Carrito.jsx`, se transparentó el manejo de excepciones para reportar el estado fidedigno de la pasarela.
+  1. Se mapearon en `Boleta.java`: `@Column(name = "numero_orden")`, `@Column(name = "subtotal")`, `@Column(name = "iva")` y `@Column(name = "estado_pago")`. Se asignó el folio único (`ORD-{timestamp}`), el cálculo de IVA 19% y el subtotal en `BoletaService.java`.
+  2. En `DetalleBoleta.java`, se corrigió la anotación a `@Column(name = "subtotal_linea", nullable = false, precision = 10, scale = 2) private BigDecimal subtotal;`, alineando el campo de la entidad con el identificador exacto de Oracle.
+  3. En `Producto.jsx`, se agregó sincronización reactiva de `stockInicial` mediante `useEffect` para actualizar de inmediato el stock en pantalla tras la venta.
+  4. En `Carrito.jsx`, se configuró el manejo transparente de excepciones para reportar el feedback real de la base de datos.
+  5. Se sincronizó el script `schema.sql` en la carpeta de entregables oficiales para garantizar 100% de coherencia entre base de datos, backend y documentación.
 
 ---
 
