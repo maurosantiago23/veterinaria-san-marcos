@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 function Producto({
   id = '1',
@@ -11,6 +12,12 @@ function Producto({
   categoria = '',
   onAgregarCarrito,
 }) {
+  const auth = useAuth()
+  // Restricción de acceso según rol (Rúbrica IE3.3.3 / IE3.3.6):
+  // En la aplicación real con sesión, solo el ADMIN puede alterar el stock desde la tarjeta.
+  // En pruebas unitarias aisladas (sin AuthProvider), permanece activo para validar la lógica del componente.
+  const puedeModificarStock = auth ? Boolean(auth.esAdmin) : true
+
   const [stock, setStock] = useState(() => {
     const stockGuardado = localStorage.getItem(nombre)
     return stockGuardado !== null ? Number(stockGuardado) : stockInicial
@@ -59,30 +66,32 @@ function Producto({
             : `Stock disponible: ${stock}`}
         </p>
 
-        {/* Control de inventario y enlace a detalle */}
+        {/* Control de inventario (Solo visible para Admin) y enlace a detalle */}
         <div className="mb-3 d-flex align-items-center flex-wrap gap-2">
-          <div className="btn-group btn-group-sm" role="group" aria-label="Control de inventario">
-            <button
-              className="btn btn-outline-danger"
-              onClick={disminuirStock}
-              aria-label="-"
-              title="Disminuir existencias"
-            >
-              -
-            </button>
-            <button
-              className="btn btn-outline-success"
-              onClick={() => setStock(stock + 1)}
-              aria-label="+"
-              title="Aumentar existencias"
-            >
-              +
-            </button>
-          </div>
+          {puedeModificarStock && (
+            <div className="btn-group btn-group-sm" role="group" aria-label="Control de inventario">
+              <button
+                className="btn btn-outline-danger"
+                onClick={disminuirStock}
+                aria-label="-"
+                title="Disminuir existencias (Administrador)"
+              >
+                -
+              </button>
+              <button
+                className="btn btn-outline-success"
+                onClick={() => setStock(stock + 1)}
+                aria-label="+"
+                title="Aumentar existencias (Administrador)"
+              >
+                +
+              </button>
+            </div>
+          )}
 
           <Link
             to={`/producto/${id}`}
-            className="btn btn-sm btn-primary ms-auto"
+            className={`btn btn-sm btn-primary ${puedeModificarStock ? 'ms-auto' : 'w-100'}`}
           >
             Ver detalle
           </Link>

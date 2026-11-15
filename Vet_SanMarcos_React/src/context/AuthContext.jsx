@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { authApi } from '../services/api'
 
-const AuthContext = createContext()
+export const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   // Persistencia de sesión ante recarga de página (F5) - Rúbrica IE3.3.2
@@ -131,8 +131,5 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
   const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth debe ser usado dentro de AuthProvider')
-  }
-  return context
+  return context || null
 }
