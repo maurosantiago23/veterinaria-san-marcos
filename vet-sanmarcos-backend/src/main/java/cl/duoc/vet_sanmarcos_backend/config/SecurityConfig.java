@@ -28,8 +28,9 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                // Rutas de documentacion Swagger
+                // Rutas de documentacion Swagger y redireccion raiz
                 .requestMatchers(
+                    "/",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     "/v3/api-docs",
