@@ -105,7 +105,7 @@ function AdminDashboard() {
           <div className="p-3 bg-light rounded text-start small mb-4">
             <strong>Credenciales oficiales en Oracle Cloud (ATP 19c):</strong>
             <br />
-            Correo: <code>admin@vetsanmarcos.cl</code>
+            Correo: <code>admin@veterinaria.cl</code>
             <br />
             Clave: <code>1234</code>
           </div>

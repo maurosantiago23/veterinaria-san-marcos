@@ -89,7 +89,11 @@ export async function apiRequest(endpoint, options = {}) {
  */
 export const normalizarProducto = (item) => {
   if (!item) return null
-  const catNombre = (item.categoria?.nombre || item.categoria || '').toLowerCase()
+  const catNombre = (
+    item.categoria?.nombreCategoria ||
+    item.categoria?.nombre ||
+    (typeof item.categoria === 'string' ? item.categoria : '')
+  ).toLowerCase()
   const precioNum = typeof item.precio === 'number' ? item.precio : Number(item.precio) || 0
   const stockVal = item.stock !== undefined ? item.stock : (item.stockInicial !== undefined ? item.stockInicial : 0)
 

@@ -129,9 +129,9 @@ function Login() {
           <div className="mt-4 p-3 bg-light rounded border text-secondary small">
             <strong>Credenciales oficiales en Oracle Cloud (ATP 19c):</strong>
             <ul className="mb-0 ps-3 mt-2" style={{ fontSize: '0.85rem' }}>
-              <li><strong>Administrador:</strong> <code>admin@vetsanmarcos.cl</code> (clave: <code>1234</code>)</li>
-              <li><strong>Cliente:</strong> <code>mauro@duocuc.cl</code> (clave: <code>1234</code>)</li>
-              <li><strong>Vendedor:</strong> <code>vendedor@vetsanmarcos.cl</code> (clave: <code>1234</code>)</li>
+              <li><strong>Administrador:</strong> <code>admin@veterinaria.cl</code> (clave: <code>1234</code>)</li>
+              <li><strong>Cliente:</strong> <code>cliente@duocuc.cl</code> (clave: <code>1234</code>)</li>
+              <li><strong>Vendedora:</strong> <code>vendedor@veterinaria.cl</code> (clave: <code>1234</code>)</li>
             </ul>
           </div>
         </form>
