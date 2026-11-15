@@ -105,6 +105,17 @@ Esta bitácora recopila en formato **mini-resumen** los problemas técnicos enco
 
 ---
 
+### 12. Persistencia de Boletas en Oracle Cloud y Sincronización de Stock
+* **Problema detectado:** Al emitir una boleta desde el frontend o Swagger, la transacción fallaba con `ORA-01400: cannot insert NULL into ("ADMIN"."BOLETA"."NUMERO_ORDEN")`. Al hacer rollback `@Transactional`, la boleta no se guardaba y el stock de productos no se descontaba en la base de datos.
+* **Causa:** La tabla `BOLETA` en Oracle Cloud tiene una restricción `NUMERO_ORDEN NOT NULL`, pero la entidad JPA `Boleta.java` omitía el mapeo de dicha columna.
+* **Solución implementada:**
+  1. Se mapeó `@Column(name = "numero_orden", length = 50, nullable = false)` en `Boleta.java` y se asigna el folio único (`ORD-{timestamp}`) en `BoletaService.java`.
+  2. Se expuso `numeroOrden` en `BoletaResponse.java` para el comprobante de cliente.
+  3. En `Producto.jsx`, se agregó sincronización reactiva de `stockInicial` mediante `useEffect` para actualizar de inmediato el stock en pantalla cuando cambia en la base de datos.
+  4. En `Carrito.jsx`, se transparentó el manejo de excepciones para reportar el estado fidedigno de la pasarela.
+
+---
+
 ### 🏆 Estado Actual Verificado
 * **Base de Datos (Oracle Autonomous ATP 19c):** 5 tablas en 3FN y conexión mTLS con Wallet activa.
 * **Backend Spring Boot 4.1.2:** Los 3 microservicios (Productos, Usuarios, Ventas) 100% operativos en AWS EC2 (`http://54.198.138.158:8080`) y documentados en Swagger.
