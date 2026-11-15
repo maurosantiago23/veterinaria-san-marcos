@@ -61,6 +61,7 @@ public class BoletaService {
 
         // 2. Crear encabezado de boleta
         Boleta boleta = new Boleta();
+        boleta.setNumeroOrden("ORD-" + System.currentTimeMillis());
         boleta.setUsuario(usuario);
         boleta.setFechaEmision(LocalDateTime.now());
 
@@ -141,7 +142,7 @@ public class BoletaService {
             }
         }
 
-        return new BoletaResponse(
+        BoletaResponse response = new BoletaResponse(
                 boleta.getIdBoleta(),
                 boleta.getFechaEmision(),
                 boleta.getTotal(),
@@ -150,6 +151,8 @@ public class BoletaService {
                 boleta.getUsuario().getEmail(),
                 detallesDto
         );
+        response.setNumeroOrden(boleta.getNumeroOrden());
+        return response;
     }
 }
 

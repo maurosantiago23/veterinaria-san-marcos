@@ -7,6 +7,7 @@ import java.util.List;
 public class BoletaResponse {
 
     private Long idBoleta;
+    private String numeroOrden;
     private LocalDateTime fechaEmision;
     private BigDecimal total;
     private Long idUsuario;
@@ -35,6 +36,14 @@ public class BoletaResponse {
 
     public void setIdBoleta(Long idBoleta) {
         this.idBoleta = idBoleta;
+    }
+
+    public String getNumeroOrden() {
+        return numeroOrden;
+    }
+
+    public void setNumeroOrden(String numeroOrden) {
+        this.numeroOrden = numeroOrden;
     }
 
     public LocalDateTime getFechaEmision() {

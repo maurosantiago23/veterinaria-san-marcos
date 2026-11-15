@@ -59,20 +59,8 @@ function Carrito() {
       setEstadoCompra('exito')
       vaciarCarrito()
     } catch (err) {
-      console.warn('Backend no disponible para emitir boleta real, usando modo respaldo:', err.message)
-      // Modo de respaldo para demostración local o si la base de datos está offline
-      const boletaFallback = {
-        idBoleta: Math.floor(100000 + Math.random() * 900000),
-        fechaEmision: new Date().toISOString(),
-        total: total,
-        nombreCliente: usuario?.nombre || 'Cliente San Marcos',
-        emailCliente: usuario?.email || 'cliente@duocuc.cl',
-        origen: 'local',
-      }
-      setBoletaEmitida(boletaFallback)
-      setTotalPagado(total)
-      setEstadoCompra('exito')
-      vaciarCarrito()
+      console.error('Error al emitir boleta en Oracle Cloud:', err)
+      setErrorVenta(`Error al procesar la venta: ${err.message}`)
     } finally {
       setProcesando(false)
     }

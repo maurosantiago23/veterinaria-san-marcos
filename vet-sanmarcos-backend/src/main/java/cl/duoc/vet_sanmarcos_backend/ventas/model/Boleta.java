@@ -20,6 +20,9 @@ public class Boleta {
     @Column(name = "id_boleta")
     private Long idBoleta;
 
+    @Column(name = "numero_orden", length = 50, nullable = false)
+    private String numeroOrden;
+
     @Column(name = "fecha_emision", nullable = false)
     private LocalDateTime fechaEmision;
 
@@ -37,10 +40,12 @@ public class Boleta {
 
     public Boleta() {
         this.fechaEmision = LocalDateTime.now();
+        this.numeroOrden = "ORD-" + System.currentTimeMillis();
     }
 
-    public Boleta(Long idBoleta, LocalDateTime fechaEmision, BigDecimal total, Usuario usuario) {
+    public Boleta(Long idBoleta, String numeroOrden, LocalDateTime fechaEmision, BigDecimal total, Usuario usuario) {
         this.idBoleta = idBoleta;
+        this.numeroOrden = numeroOrden != null ? numeroOrden : "ORD-" + System.currentTimeMillis();
         this.fechaEmision = fechaEmision != null ? fechaEmision : LocalDateTime.now();
         this.total = total;
         this.usuario = usuario;
@@ -58,6 +63,14 @@ public class Boleta {
 
     public void setIdBoleta(Long idBoleta) {
         this.idBoleta = idBoleta;
+    }
+
+    public String getNumeroOrden() {
+        return numeroOrden;
+    }
+
+    public void setNumeroOrden(String numeroOrden) {
+        this.numeroOrden = numeroOrden;
     }
 
     public LocalDateTime getFechaEmision() {

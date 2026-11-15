@@ -19,9 +19,15 @@ function Producto({
   const puedeModificarStock = auth ? Boolean(auth.esAdmin) : true
 
   const [stock, setStock] = useState(() => {
-    const stockGuardado = localStorage.getItem(nombre)
-    return stockGuardado !== null ? Number(stockGuardado) : stockInicial
+    return stockInicial !== undefined ? stockInicial : 5
   })
+
+  // Sincronizar cuando el stock real se actualiza desde Oracle Cloud
+  useEffect(() => {
+    if (stockInicial !== undefined && stockInicial !== null) {
+      setStock(stockInicial)
+    }
+  }, [stockInicial])
 
   useEffect(() => {
     localStorage.setItem(nombre, stock)
