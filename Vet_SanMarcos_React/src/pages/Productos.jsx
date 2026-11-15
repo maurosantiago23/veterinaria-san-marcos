@@ -153,14 +153,6 @@ function Productos() {
           >
             Alimentos
           </button>
-          <button
-            className={`btn btn-sm ${
-              categoriaActual === 'accesorios' ? 'btn-primary' : 'btn-outline-primary'
-            }`}
-            onClick={() => cambiarCategoria('accesorios')}
-          >
-            Accesorios
-          </button>
         </div>
       </div>
 
