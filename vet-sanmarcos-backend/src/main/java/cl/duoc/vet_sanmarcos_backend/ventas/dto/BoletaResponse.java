@@ -9,7 +9,10 @@ public class BoletaResponse {
     private Long idBoleta;
     private String numeroOrden;
     private LocalDateTime fechaEmision;
+    private BigDecimal subtotal;
+    private BigDecimal iva;
     private BigDecimal total;
+    private String estadoPago;
     private Long idUsuario;
     private String nombreCliente;
     private String emailCliente;
@@ -60,6 +63,30 @@ public class BoletaResponse {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public BigDecimal getIva() {
+        return iva;
+    }
+
+    public void setIva(BigDecimal iva) {
+        this.iva = iva;
+    }
+
+    public String getEstadoPago() {
+        return estadoPago;
+    }
+
+    public void setEstadoPago(String estadoPago) {
+        this.estadoPago = estadoPago;
     }
 
     public Long getIdUsuario() {

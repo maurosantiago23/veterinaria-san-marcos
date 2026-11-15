@@ -25,8 +25,23 @@ public class BoletaController {
 
     private final BoletaService boletaService;
 
+    @jakarta.persistence.PersistenceContext
+    private jakarta.persistence.EntityManager entityManager;
+
     public BoletaController(BoletaService boletaService) {
         this.boletaService = boletaService;
+    }
+
+    @GetMapping("/columnas")
+    @Operation(summary = "Diagnostico de columnas en Oracle", description = "Lista las columnas reales de BOLETA y DETALLE_BOLETA")
+    public ResponseEntity<?> obtenerColumnas() {
+        try {
+            var b = entityManager.createNativeQuery("SELECT column_name, data_type, nullable FROM all_tab_columns WHERE table_name = 'BOLETA' AND owner = 'ADMIN'").getResultList();
+            var d = entityManager.createNativeQuery("SELECT column_name, data_type, nullable FROM all_tab_columns WHERE table_name = 'DETALLE_BOLETA' AND owner = 'ADMIN'").getResultList();
+            return ResponseEntity.ok(Map.of("boleta", b, "detalle_boleta", d));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+        }
     }
 
     @PostMapping

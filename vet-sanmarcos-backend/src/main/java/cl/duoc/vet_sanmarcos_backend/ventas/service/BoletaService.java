@@ -64,8 +64,9 @@ public class BoletaService {
         boleta.setNumeroOrden("ORD-" + System.currentTimeMillis());
         boleta.setUsuario(usuario);
         boleta.setFechaEmision(LocalDateTime.now());
+        boleta.setEstadoPago("APROBADO");
 
-        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal subtotalAcumulado = BigDecimal.ZERO;
 
         // 3. Procesar cada item del carrito
         for (DetalleVentaRequest item : request.getItems()) {
@@ -76,7 +77,7 @@ public class BoletaService {
             productoService.descontarStock(producto.getIdProducto(), item.getCantidad());
 
             BigDecimal subtotal = producto.getPrecio().multiply(BigDecimal.valueOf(item.getCantidad()));
-            total = total.add(subtotal);
+            subtotalAcumulado = subtotalAcumulado.add(subtotal);
 
             DetalleBoleta detalle = new DetalleBoleta();
             detalle.setProducto(producto);
@@ -87,7 +88,12 @@ public class BoletaService {
             boleta.agregarDetalle(detalle);
         }
 
-        boleta.setTotal(total);
+        BigDecimal ivaCalculado = subtotalAcumulado.multiply(BigDecimal.valueOf(0.19)).setScale(2, java.math.RoundingMode.HALF_UP);
+        BigDecimal totalFinal = subtotalAcumulado.add(ivaCalculado);
+
+        boleta.setSubtotal(subtotalAcumulado);
+        boleta.setIva(ivaCalculado);
+        boleta.setTotal(totalFinal);
 
         // 4. Guardar boleta y sus detalles en cascada
         Boleta guardada = boletaRepository.save(boleta);
@@ -152,6 +158,9 @@ public class BoletaService {
                 detallesDto
         );
         response.setNumeroOrden(boleta.getNumeroOrden());
+        response.setSubtotal(boleta.getSubtotal());
+        response.setIva(boleta.getIva());
+        response.setEstadoPago(boleta.getEstadoPago());
         return response;
     }
 }

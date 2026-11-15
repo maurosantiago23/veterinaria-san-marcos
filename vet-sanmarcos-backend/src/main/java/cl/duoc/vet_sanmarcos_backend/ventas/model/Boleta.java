@@ -26,8 +26,17 @@ public class Boleta {
     @Column(name = "fecha_emision", nullable = false)
     private LocalDateTime fechaEmision;
 
+    @Column(name = "subtotal", nullable = false, precision = 10, scale = 2)
+    private BigDecimal subtotal;
+
+    @Column(name = "iva", nullable = false, precision = 10, scale = 2)
+    private BigDecimal iva;
+
     @Column(name = "total", nullable = false, precision = 10, scale = 2)
     private BigDecimal total;
+
+    @Column(name = "estado_pago", length = 20)
+    private String estadoPago;
 
     // Relacion con el usuario/cliente titular de la compra
     @ManyToOne(fetch = FetchType.EAGER)
@@ -41,13 +50,20 @@ public class Boleta {
     public Boleta() {
         this.fechaEmision = LocalDateTime.now();
         this.numeroOrden = "ORD-" + System.currentTimeMillis();
+        this.subtotal = BigDecimal.ZERO;
+        this.iva = BigDecimal.ZERO;
+        this.total = BigDecimal.ZERO;
+        this.estadoPago = "APROBADO";
     }
 
-    public Boleta(Long idBoleta, String numeroOrden, LocalDateTime fechaEmision, BigDecimal total, Usuario usuario) {
+    public Boleta(Long idBoleta, String numeroOrden, LocalDateTime fechaEmision, BigDecimal subtotal, BigDecimal iva, BigDecimal total, String estadoPago, Usuario usuario) {
         this.idBoleta = idBoleta;
         this.numeroOrden = numeroOrden != null ? numeroOrden : "ORD-" + System.currentTimeMillis();
         this.fechaEmision = fechaEmision != null ? fechaEmision : LocalDateTime.now();
-        this.total = total;
+        this.subtotal = subtotal != null ? subtotal : BigDecimal.ZERO;
+        this.iva = iva != null ? iva : BigDecimal.ZERO;
+        this.total = total != null ? total : BigDecimal.ZERO;
+        this.estadoPago = estadoPago != null ? estadoPago : "APROBADO";
         this.usuario = usuario;
     }
 
@@ -71,6 +87,30 @@ public class Boleta {
 
     public void setNumeroOrden(String numeroOrden) {
         this.numeroOrden = numeroOrden;
+    }
+
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public BigDecimal getIva() {
+        return iva;
+    }
+
+    public void setIva(BigDecimal iva) {
+        this.iva = iva;
+    }
+
+    public String getEstadoPago() {
+        return estadoPago;
+    }
+
+    public void setEstadoPago(String estadoPago) {
+        this.estadoPago = estadoPago;
     }
 
     public LocalDateTime getFechaEmision() {
