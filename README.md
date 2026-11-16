@@ -1,66 +1,102 @@
 # Veterinaria San Marcos 🐾
-
-Sistema web de comercio y gestión para la **Veterinaria San Marcos**, desarrollado para la asignatura **DSY1104 - Desarrollo Fullstack II** (Duoc UC).
+**Plataforma Web Fullstack: Comercio Electrónico y Gestión Clínica Veterinaria**  
+* **Asignatura:** DSY1104 - Desarrollo Fullstack II  
+* **Institución:** Duoc UC - Escuela de Informática y Telecomunicaciones  
+* **Evaluación:** Evaluación Parcial 3 (40%)  
+* **Autores:** Mauro Santiago & Gabriel González  
+* **Docente:** Hernán  
+* **Rama oficial de entrega:** `evaluacion-3`  
 
 ---
 
-## 👥 Integrantes
-* **Mauro Santiago**
-* **Gabriel González**
+## 📌 1. Descripción del Proyecto
+
+**Veterinaria San Marcos** es una solución web empresarial Fullstack desarrollada bajo una arquitectura desacoplada y orientada a servicios en la nube. Permite la comercialización de insumos clínicos, alimentos para mascotas y el agendamiento y facturación de servicios médicos veterinarios con distinción de cupos diarios.
+
+### Arquitectura Tecnológica en la Nube
+* **Frontend:** Single Page Application (SPA) desarrollada en **React 19** con **Vite**, gestionando estado global mediante Context API (`AuthContext`, `CartContext`), persistencia de sesión segura en `localStorage` (Anti-F5) y control de acceso basado en roles (RBAC).
+* **Backend:** API REST modular desarrollada en **Spring Boot 4.1.2** sobre **Java 21 LTS**, estructurada en microservicios desacoplados (Productos, Usuarios y Ventas) con transacciones atómicas (`@Transactional`), seguridad stateless con tokens **JWT (HMAC-SHA256)** y documentación interactiva en **OpenAPI 3 / Swagger**.
+* **Base de Datos:** **Oracle Autonomous Database (ATP 19c)** en Oracle Cloud Infrastructure (OCI - región `sa-valparaiso-1`), modelada estrictamente en **Tercera Forma Normal (3FN)** con conexión cifrada mediante **mTLS y Oracle Wallet**.
+* **Infraestructura Cloud:** Desplegada en una instancia **AWS EC2 (`t3.medium`)** ejecutando Amazon Linux 2023.
 
 ---
 
-## 📂 Organización del Repositorio
-
-El repositorio está dividido en dos proyectos independientes correspondientes al avance de la asignatura:
+## 📂 2. Estructura del Repositorio (Rama `evaluacion-3`)
 
 ```text
 veterinaria-san-marcos/
-├── README.md                 # Documentación general del repositorio
-├── Vet_SanMarcos/            # UNIDAD 1: Sitio Web Estático (HTML5, CSS3, JS Vanilla, Bootstrap 5)
-└── Vet_SanMarcos_React/      # UNIDAD 2: Aplicación SPA (React, Vite, React-Bootstrap, React Router)
+├── Vet_SanMarcos_React/          # Proyecto Frontend (React 19 + Vite)
+│   ├── src/
+│   │   ├── components/           # Componentes UI reutilizables (Navbar, Producto, etc.)
+│   │   ├── context/              # Contextos globales (AuthContext con JWT, CartContext)
+│   │   ├── pages/                # Vistas principales (Inicio, Productos, Carrito, Login, Admin)
+│   │   ├── services/             # Cliente HTTP centralizado (api.js con detección de host)
+│   │   └── setupTests.js         # Configuración del entorno de pruebas unitarias
+│   ├── package.json              # Dependencias y scripts de Vite / Vitest
+│   └── vite.config.js
+│
+├── vet-sanmarcos-backend/        # Proyecto Backend (Spring Boot 4 + Java 21)
+│   ├── src/main/java/cl/duoc/vet_sanmarcos_backend/
+│   │   ├── config/               # Seguridad Spring Security, CORS y PasswordEncoder
+│   │   ├── productos/            # Microservicio de Catálogo e Inventario (/api/v1/productos)
+│   │   ├── usuarios/             # Microservicio de Usuarios y Auth JWT (/api/v1/auth)
+│   │   └── ventas/               # Microservicio de Ventas y Boletas (/api/v1/boletas)
+│   ├── src/main/resources/       # application.properties (Conexión Oracle ATP)
+│   └── pom.xml                   # Dependencias Maven (JPA, Security, JJWT, Springdoc)
+│
+├── .gitignore                    # Reglas de exclusión para Git (node_modules, target, etc.)
+└── README.md                     # Documentación oficial del repositorio
 ```
 
 ---
 
-## 📌 Unidad 1: Frontend Estático (`Vet_SanMarcos/`)
+## ☁️ 3. Accesos y Despliegue en la Nube (AWS EC2)
 
-Proyecto presentado para la **Evaluación Parcial 1**. No requiere Node.js ni instalación de paquetes.
-
-* **Tecnologías:** HTML5 semántico, CSS3, JavaScript Vanilla, Bootstrap 5, `localStorage`.
-* **Funcionalidades:**
-  * Catálogo de productos y servicios con filtros por categoría.
-  * Vista de detalle de productos.
-  * Carrito de compras con persistencia local (`localStorage`) y cálculo de IVA/total.
-  * Formularios de contacto, inicio de sesión y registro con validación visual.
-  * Panel administrativo con simulación de roles (Admin, Vendedor, Cliente).
-* **Cómo ejecutarlo:**
-  Abre una terminal en `Vet_SanMarcos` y corre:
-  ```powershell
-  python -m http.server 8081
-  ```
-  O ábrelo directamente con la extensión **Live Server** de VS Code sobre `Vet_SanMarcos/index.html`.
+> **Nota sobre la IP pública dinámica:**  
+> Al tratarse de una instancia educativa sin IP elástica asignada, AWS asigna una dirección IPv4 pública cada vez que la máquina virtual se enciende.
+> * **Frontend React (Tienda Web):** `http://<IP_PUBLICA_EC2>:5173`
+> * **Swagger UI Interactivo (API REST):** `http://<IP_PUBLICA_EC2>:8080/swagger-ui/index.html`
 
 ---
 
-## ⚛️ Unidad 2: Aplicación React + Vite (`Vet_SanMarcos_React/`)
+## 🔐 4. Matriz de Roles y Credenciales de Demostración
 
-Migración y modernización del sistema hacia una aplicación web dinámica de una sola página (SPA).
+El sistema valida perfiles de usuario mediante roles en el token JWT (`ADMIN`, `VENDEDOR`, `CLIENTE`):
 
-* **Tecnologías:** React 19, Vite, React Router 7, Bootstrap 5 / React-Bootstrap.
-* **Guía completa de trabajo:**
-  👉 Consulta la guía detallada paso a paso en [Vet_SanMarcos_React/README.md](Vet_SanMarcos_React/README.md).
-* **Resumen de inicio rápido en tu PC:**
-  ```powershell
-  cd Vet_SanMarcos_React
-  npm install
-  npm run dev
-  ```
-  Abre `http://localhost:5173/` en tu navegador para ver los cambios en tiempo real.
+| Rol | Correo Electrónico | Contraseña | Permisos y Capacidades |
+| :--- | :--- | :---: | :--- |
+| **ADMINISTRADOR** | `admin@veterinaria.cl` | `1234` | Acceso total: gestión y alteración de stock/cupos, panel administrativo y supervisión de boletas. |
+| **VENDEDOR** | `vendedor@veterinaria.cl` | `1234` | Consulta de catálogo y visualización del historial de órdenes emitidas para despacho/atención. |
+| **CLIENTE** | `cliente@duocuc.cl` | `1234` | Navegación de catálogo, carrito de compras dinámico y confirmación de compra con emisión de boleta propia. |
 
 ---
 
-## ☁️ Despliegue en AWS Academy EC2
+## ⚙️ 5. Instrucciones de Ejecución Local
 
-El proyecto incluye la configuración e instrucciones paso a paso para desplegar la aplicación en una instancia **EC2 (Amazon Linux 2023)** si el docente solicita su evaluación en la nube. Todas las instrucciones de AWS, llaves `.pem` y configuración de red están detalladas en [Vet_SanMarcos_React/README.md](Vet_SanMarcos_React/README.md#despliegue-en-aws-academy-ec2-evaluaci%C3%B3n-en-la-nube).
+### Prerrequisitos
+* Java Development Kit (JDK) 21 LTS
+* Node.js v18.0 o superior con npm
+* Wallet de Oracle Cloud descomprimida en la raíz del proyecto (`wallet/`)
 
+### 1. Iniciar el Backend (Spring Boot)
+```bash
+cd vet-sanmarcos-backend
+./mvnw spring-boot:run
+```
+*El servicio REST iniciará en el puerto `8080` conectándose a Oracle ATP.*  
+*Consola Swagger disponible en:* `http://localhost:8080/swagger-ui/index.html`
+
+### 2. Iniciar el Frontend (React + Vite)
+```bash
+cd Vet_SanMarcos_React
+npm install
+npm run dev
+```
+*La aplicación web estará disponible en:* `http://localhost:5173`
+
+### 3. Ejecutar Pruebas Unitarias
+```bash
+cd Vet_SanMarcos_React
+npm test
+```
+*Ejecuta la suite de 13 pruebas unitarias automatizadas con Vitest.*
