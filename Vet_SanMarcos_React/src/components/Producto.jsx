@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { productosApi } from '../services/api'
 
 function Producto({
   id = '1',
@@ -33,10 +34,29 @@ function Producto({
     localStorage.setItem(nombre, stock)
   }, [stock, nombre])
 
+  const cambiarStock = async (delta) => {
+    const nuevoStock = stock + delta
+    if (nuevoStock < 0) return
+    setStock(nuevoStock)
+
+    // Si tiene id y el usuario tiene permisos de admin reales, persistir en Oracle Cloud mediante la API REST
+    if (id && auth && auth.esAdmin) {
+      try {
+        await productosApi.actualizarStock(id, nuevoStock)
+      } catch (err) {
+        console.warn(`No se pudo sincronizar el stock del producto ${id} con la base de datos:`, err.message)
+      }
+    }
+  }
+
   const disminuirStock = () => {
     if (stock > 0) {
-      setStock(stock - 1)
+      cambiarStock(-1)
     }
+  }
+
+  const aumentarStock = () => {
+    cambiarStock(1)
   }
 
   const esServicio =
@@ -86,7 +106,7 @@ function Producto({
               </button>
               <button
                 className="btn btn-outline-success"
-                onClick={() => setStock(stock + 1)}
+                onClick={aumentarStock}
                 aria-label="+"
                 title="Aumentar existencias (Administrador)"
               >

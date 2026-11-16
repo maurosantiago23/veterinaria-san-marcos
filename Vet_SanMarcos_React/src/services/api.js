@@ -126,6 +126,11 @@ export const productosApi = {
   obtenerTodos: () => apiRequest('/productos'),
   obtenerPorId: (id) => apiRequest(`/productos/${id}`),
   obtenerPorCategoria: (categoria) => apiRequest(`/productos/categoria/${encodeURIComponent(categoria)}`),
+  actualizarStock: (id, stock) =>
+    apiRequest(`/productos/${id}/stock`, {
+      method: 'PUT',
+      body: JSON.stringify({ stock: Number(stock) }),
+    }),
 }
 
 /**
