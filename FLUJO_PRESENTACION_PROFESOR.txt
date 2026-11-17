@@ -58,8 +58,8 @@ sin exponer contrasenas en la red."
 BLOQUE 2: BASE DE DATOS ORACLE CLOUD Y MODELO 3FN (02:00 - 05:00)
 --------------------------------------------------------------------------------
 Accion en pantalla (Mauro):
-Cambia a la Pestana 3 (GitHub con schema.sql) o muestra el diagrama DER
-en la documentacion.
+En la Pestana 3 de GitHub abre la carpeta 'database' y hace clic en 'schema.sql'
+(o muestra el diagrama DER en la documentacion).
 
 Dice Gabriel:
 "Para la base de datos implementamos Oracle Cloud Autonomous Database en la
