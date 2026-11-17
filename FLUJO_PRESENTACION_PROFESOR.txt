@@ -1,0 +1,121 @@
+================================================================================
+GUION Y FLUJO DE PRESENTACION ORAL (15 MINUTOS + 5 MINUTOS PREGUNTAS)
+EVALUACION 3 - VETERINARIA SAN MARCOS
+Docente: Hernan | Integrantes: Mauro Santiago & Gabriel Gonzalez
+================================================================================
+
+ESTRUCTURA DE TIEMPO (TOTAL 20 MINUTOS):
+- Minutos 00:00 - 02:30 | 1. Introduccion y Arquitectura General
+- Minutos 02:30 - 05:30 | 2. Base de Datos Oracle Cloud ATP (3FN y Wallet mTLS)
+- Minutos 05:30 - 09:00 | 3. Microservicios Backend Spring Boot y Swagger
+- Minutos 09:00 - 13:00 | 4. Frontend React 19 en Vivo (Flujo Completo de Usuario)
+- Minutos 13:00 - 15:00 | 5. Pruebas Unitarias, Despliegue AWS EC2 y Conclusion
+- Minutos 15:00 - 20:00 | 6. Rueda de Preguntas del Docente (Q&A)
+
+--------------------------------------------------------------------------------
+1. INTRODUCCION Y ARQUITECTURA GENERAL (00:00 - 02:30)
+--------------------------------------------------------------------------------
+* Quién habla: Mauro o Gabriel (pueden alternar).
+* Mensaje clave:
+  "Buenos dias profesor Hernan. Hoy presentamos la entrega final del sistema
+   web para la Clinica Veterinaria San Marcos.
+   El objetivo principal fue construir una plataforma Fullstack moderna,
+   robusta y desacoplada, cumpliendo al 100% las tres capas solicitadas:
+   1. Frontend SPA reactivo en React 19 + Vite.
+   2. Backend en Java 21 LTS con Spring Boot, estructurado en arquitectura
+      modular desacoplada (Microservicios de Productos, Usuarios y Ventas).
+   3. Base de Datos Oracle Autonomous Database (ATP 19c) en Oracle Cloud,
+      modelada en Tercera Forma Normal (3FN) y conectada mediante mTLS con
+      Oracle Wallet sin exponer credenciales.
+   4. Todo desplegado de forma real y operativa en una instancia AWS EC2."
+
+--------------------------------------------------------------------------------
+2. BASE DE DATOS ORACLE CLOUD (OCI) Y MODELO 3FN (02:30 - 05:30)
+--------------------------------------------------------------------------------
+* Pantalla a mostrar: Consola de Oracle Cloud / Worksheet SQL o Documento DER.
+* Puntos a destacar:
+  1. Mostrar las 5 tablas de la pauta:
+     - USUARIO: Clientes, Vendedores y Administradores (con hashing seguro).
+     - CATEGORIA: Alimentos, Farmacia, Accesorios y Servicios Medicos.
+     - PRODUCTO: Catalogo de productos fisicos y atenciones medicas/citas.
+     - BOLETA: Registro maestro de ventas con folio, fecha, total e id_usuario.
+     - DETALLE_BOLETA: Lineas de venta con producto, cantidad, precio historico
+       y subtotal (3FN estricta: si el precio cambia a futuro en PRODUCTO,
+       la boleta historica conserva su valor inalterable).
+  2. Destacar la conexion mTLS (Mutual TLS):
+     "Para la conexion entre AWS EC2 y Oracle Cloud no usamos claves planas en
+      la red, sino un handshake criptografico bidireccional mediante Oracle
+      Wallet (cwallet.sso)."
+
+--------------------------------------------------------------------------------
+3. MICROSERVICIOS BACKEND SPRING BOOT Y SWAGGER (05:30 - 09:00)
+--------------------------------------------------------------------------------
+* Pantalla a mostrar: Swagger UI en el navegador (`http://<IP_EC2>:8080/swagger-ui/index.html`).
+* Puntos a destacar:
+  1. Arquitectura Package-by-Feature (Modular Monolith):
+     "Organizamos los microservicios por dominio desacoplado dentro de Spring Boot:
+      - cl.duoc.vet_sanmarcos_backend.productos
+      - cl.duoc.vet_sanmarcos_backend.usuarios
+      - cl.duoc.vet_sanmarcos_backend.ventas
+      Esto evita sobrecargar la memoria de la maquina virtual de AWS levantando
+      3 JVMs separadas, pero mantiene estricta separacion de responsabilidades."
+  2. Demostracion en vivo en Swagger:
+     - GET /api/v1/productos: Mostrar respuesta JSON 200 OK con los productos activos en Oracle ATP 19c (incluyendo servicios con cupos de atención).
+     - POST /api/v1/auth/login: Probar autenticacion y generacion de token JWT.
+     - POST /api/v1/boletas: Explicar la transaccion atomica (@Transactional)
+       donde se crea la boleta, se guardan los detalles y se descuenta el stock
+       automaticamente en PRODUCTO. Si falta stock, la transaccion hace Rollback.
+
+--------------------------------------------------------------------------------
+4. FRONTEND REACT 19 EN VIVO (FLUJO DE USUARIO) (09:00 - 13:00)
+--------------------------------------------------------------------------------
+* Pantalla a mostrar: Aplicacion React en el navegador (`http://<IP_EC2>:5173`).
+* Flujo de demostracion en vivo:
+  1. Pagina de Inicio y Nosotros: Presentacion de la clinica, equipo veterinario
+     (Dres. Gabriel Gonzalez y Mauro Santiago).
+  2. Catalogo de Productos y Servicios:
+     - Filtrado por categoria (Alimentos, Farmacia, Accesorios, Servicios).
+     - Para servicios veterinarios (citas/peluqueria), la tarjeta muestra
+       claramente 'Cupos disponibles hoy: X' en vez de 'Stock' (atendiendo
+       el feedback de la Unidad 2).
+  3. Carrito de Compras y Control de Autenticacion:
+     - Agregar productos al carrito.
+     - Intentar procesar compra sin login: el sistema bloquea el checkout y
+       muestra advertencia amigable indicando que debe iniciar sesion.
+  4. Iniciar Sesion / Registro:
+     - Ingreso con credenciales de prueba.
+     - Recepcion del token JWT y actualizacion reactiva de la barra superior
+       (muestra badge con nombre y rol, por ejemplo 👤 Mauro (ADMIN), habilitando el acceso a /admin solo para roles autorizados y el botón de cerrar sesión).
+  5. Finalizacion de Compra:
+     - Presionar 'Confirmar Compra'.
+     - Se invoca la API POST /api/v1/boletas.
+     - Se muestra la confirmacion en pantalla con el numero de boleta oficial
+       generado por Oracle Cloud.
+
+--------------------------------------------------------------------------------
+5. PRUEBAS UNITARIAS, DESPLIEGUE AWS Y CONCLUSION (13:00 - 15:00)
+--------------------------------------------------------------------------------
+* Pantalla a mostrar: Terminal de comandos en AWS EC2 y ejecucion de tests.
+* Puntos a destacar:
+  1. Pruebas Unitarias:
+     - Ejecutar `npm test -- --run` en terminal: 13/13 pruebas en verde con Vitest
+       (cobertura de componentes, calculo de totales del carrito, validacion
+       de formularios y renderizado condicional).
+  2. Despliegue en AWS EC2:
+     - Instancia Linux corriendo en la nube publica, con puertos 8080 (Backend)
+       y 5173 (Frontend) accesibles y asegurados por Security Groups.
+  3. Cierre:
+     "Con esto demostramos un ciclo de desarrollo Fullstack completo: desde el
+      modelado de datos en 3FN, desarrollo de microservicios REST, seguridad JWT,
+      interfaz reactiva de usuario, hasta el despliegue cloud en AWS y Oracle."
+
+--------------------------------------------------------------------------------
+6. RUEDA DE PREGUNTAS (15:00 - 20:00)
+--------------------------------------------------------------------------------
+* Consultar la guia: `GUIA_DEFENSA_EXAMEN.txt` para respuestas directas a:
+  - 3FN y dependencias transitivas.
+  - mTLS y Oracle Wallet.
+  - Arquitectura modular vs microservicios distribuidos.
+  - Seguridad stateless con JWT y Spring Security.
+================================================================================
+
