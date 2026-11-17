@@ -8,11 +8,6 @@ dist/
 /Vet_SanMarcos_React/pdf y comandos/
 *.pdf
 
-# Documentos de estudio y guion de presentacion para Mauro y Gabriel
-GUIA_DEFENSA_EXAMEN.txt
-FLUJO_PRESENTACION_PROFESOR.txt
-*.estudio.txt
-
 # Oracle Cloud Wallet y certificados de seguridad (Credenciales y llaves mTLS)
 wallet/
 *.zip
