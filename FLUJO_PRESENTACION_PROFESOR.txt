@@ -44,9 +44,10 @@ Queremos aclarar primero que la plataforma web conserva el mismo diseno visual
 e identidad que presentamos en la Unidad 2; lo que incorporamos para esta entrega
 son importantes mejoras tecnicas y funcionales en la integracion con el backend,
 la gestion de inventario y la seguridad, gracias al feedback recibido y a nuestra
-propia revision del proyecto.
+propia revision del proyecto."
 
-La solucion esta construida sobre una arquitectura Cloud de tres capas reales:
+Dice Gabriel:
+"Para lograr esto, construimos una arquitectura Cloud de tres capas reales:
 Primero, un frontend reactivo en React 19 con Vite, servido en el puerto 5173 de AWS EC2.
 Segundo, un backend en Java 21 con Spring Boot en el puerto 8080 de AWS EC2, con
 arquitectura modular orientada al dominio.
@@ -59,7 +60,7 @@ BLOQUE 2: BASE DE DATOS ORACLE CLOUD Y MODELO 3FN (02:00 - 05:00)
 --------------------------------------------------------------------------------
 Accion en pantalla (Mauro):
 En la Pestana 3 de GitHub abre la carpeta 'database' y hace clic en 'schema.sql'
-(o muestra el diagrama DER en la documentacion).
+(o muestra el diagrama DER en el documento).
 
 Dice Gabriel:
 "Para la base de datos implementamos Oracle Cloud Autonomous Database en la
@@ -94,7 +95,7 @@ Ahora vamos a probar los endpoints en vivo desde Swagger:"
 Accion en pantalla (Mauro):
 Abre GET /api/v1/productos, clic en 'Try it out' y 'Execute'.
 
-Dice Mauro:
+Dice Gabriel:
 "Aqui ejecutamos el GET de productos. Como vemos, recibimos una respuesta 200 OK
 con los datos directamente desde Oracle Cloud. Pueden notar que el sistema
 diferencia productos fisicos como Simparica de servicios clinicos como Consulta
@@ -175,12 +176,14 @@ Dice Mauro:
 "Para asegurar la estabilidad del frontend implementamos pruebas automatizadas
 con Vitest. Ejecutamos el comando de tests y vemos trece de trece pruebas pasando
 en verde, cubriendo el renderizado de productos, validacion del formulario de
-login y el calculo de subtotales en el carrito.
+login y el calculo de subtotales en el carrito."
 
-Como conclusion, logramos un ciclo Fullstack completo y operativo en la nube:
+Dice Gabriel:
+"Como conclusion, logramos un ciclo Fullstack completo y operativo en la nube:
 base de datos Oracle ATP en 3FN, backend modular en Spring Boot con seguridad
 JWT y control transaccional, frontend reactivo en React 19 y despliegue real en
-infraestructura cloud de AWS EC2."
+infraestructura cloud de AWS EC2. Muchas gracias profesor, quedamos atentos a
+sus preguntas."
 
 --------------------------------------------------------------------------------
 BLOQUE 6: RONDA DE PREGUNTAS INDIVIDUALES DEL DOCENTE (15:00 - 20:00)
